@@ -1,0 +1,19 @@
+{
+    "name": "deprode/slimbbs",
+    "license": "BSD-3-Clause",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/src"
+        }
+    },
+    "require": {
+        "slim/slim": "^3.0@beta",
+        "slim/twig-view": "^1.1",
+        "slim/flash": "^0.1.0",
+        "monolog/monolog": "^1.13",
+        "slim/csrf": "^0.4.0",
+        "fuelphp/validation": "^2.0",
+        "akrabat/rka-slim-session-middleware": "dev-master"
+    }
+}

@@ -1,0 +1,37 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>認証 | 掲示板</title>
+    {% include "header.twig" %}
+    {% include "link-css.twig" %}
+    <link href='/css/style.css' rel='stylesheet' type='text/css'>
+</head>
+<body>
+    <div class="container">
+        <div><b>ログインフォーム</b></div>
+        <hr>
+        {% if error %}
+        <div>
+            <b><u>{{ error | nl2br }}</u></b>
+        </div>
+        {% endif %}
+        <form action="{{ path_for('admin') }}" method="post" accept-charset="utf-8">
+            <input type="hidden" name="csrf_name" value="{{ csrf_name }}">
+            <input type="hidden" name="csrf_value" value="{{ csrf_value }}">
+            <div class="row">
+                <div class="six columns">
+                    <label for="id">ID</label>
+                    <input name="id" type="text" value="{{ id }}">
+                    <label for="password">パスワード</label>
+                    <input name="password" type="password">
+                </div>
+            </div>
+            <div class="row">
+                <div class="six columns">
+                    <input type="submit" value="ログイン">
+                </div>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
