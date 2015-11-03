@@ -7,6 +7,7 @@ use Fuel\Validation\Validator;
 use RKA\Session;
 use Slim\Flash\Messages;
 use App\Classes\Log;
+use App\Classes\Config;
 
 final class SaveAction
 {
@@ -15,19 +16,21 @@ final class SaveAction
     private $validate;
     private $session;
     private $flash;
+    private $config;
 
     private $log;
 
     private $cached_errors;
 
-    public function __construct(Twig $view, LoggerInterface $logger, Validator $validate, Session $session, Messages $flash, Log $log)
+    public function __construct(Twig $view, LoggerInterface $logger, Validator $validate, Session $session, Messages $flash, Log $log, Config $config)
     {
-        $this->view = $view;
-        $this->logger = $logger;
+        $this->view     = $view;
+        $this->logger   = $logger;
         $this->validate = $validate;
-        $this->session = $session;
-        $this->flash = $flash;
-        $this->log = $log;
+        $this->session  = $session;
+        $this->flash    = $flash;
+        $this->log      = $log;
+        $this->config   = $config;
     }
 
     public function dispatch($request, $response, $args)
@@ -79,26 +82,33 @@ EOT;
 
     public function validation($input)
     {
-        $this->validate->addField('name', '名前')
-                           ->maxLength(50)
-                           ->setMessage('{label} は50文字までです。')
-                       ->addField('subject', 'タイトル')
-                           ->maxLength(50)
-                           ->setMessage('{label} は50文字までです。')
-                       ->addField('body', '本文')
-                           ->required()
-                           ->setMessage('{label} は必須です。')
-                           ->maxLength(2000)
-                           ->setMessage('{label} は2000文字までです。')
-                       ->addField('email', 'メールアドレス')
-                           ->email()
-                           ->setMessage('{label} 欄にはメールアドレスを書いてください。')
-                       ->addField('url', 'URL')
-                           ->url()
-                           ->setMessage('{label} 欄にはURLを書いてください。')
-                       ->addField('del_pass', '削除パス')
-                           ->Regex('/\w/')
-                           ->setMessage('{label} は英数字とアンダースコアを使ってください。');
+        $ngwords = $this->config->getConfig('ngword');
+
+        $val = $this->validate;
+        $val->addCustomRule('notMatchCollectionRule', '\App\Rule\NotMatchCollectionRule');
+
+        $val->addField('name', '名前')
+               ->maxLength(50)
+               ->setMessage('{label} は50文字までです。')
+            ->addField('subject', 'タイトル')
+               ->maxLength(50)
+               ->setMessage('{label} は50文字までです。')
+            ->addField('body', '本文')
+               ->required()
+               ->setMessage('{label} は必須です。')
+               ->maxLength(2000)
+               ->setMessage('{label} は2000文字までです。')
+               ->notMatchCollectionRule($ngwords)
+               ->setMessage('NGワードが含まれています。')
+            ->addField('email', 'メールアドレス')
+               ->email()
+               ->setMessage('{label} 欄にはメールアドレスを書いてください。')
+            ->addField('url', 'URL')
+               ->url()
+               ->setMessage('{label} 欄にはURLを書いてください。')
+            ->addField('del_pass', '削除パス')
+               ->Regex('/\w/')
+               ->setMessage('{label} は英数字とアンダースコアを使ってください。');
 
         $result = $this->validate->run($input);
 
