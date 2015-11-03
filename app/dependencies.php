@@ -42,6 +42,12 @@ $container['log'] = function ($c) {
     return $log;
 };
 
+// config
+$container['config'] = function ($c) {
+    $settings = $c->get('settings');
+    return new \App\Classes\Config($settings['config']['path']);
+};
+
 // -----------------------------------------------------------------------------
 // Service factories
 // -----------------------------------------------------------------------------
@@ -77,7 +83,8 @@ $container['App\Action\SaveAction'] = function ($c) {
             $c->get('validate'),
             $c->get('session'),
             $c->get('flash'),
-            $c->get('log')
+            $c->get('log'),
+            $c->get('config')
        );
     return $action;
 };

@@ -25,6 +25,11 @@ return [
             'max'  => 100,
         ],
 
+        // bbs's configuration settings
+        'config' => [
+            'path' => __DIR__ . '/../config/config.json',
+        ],
+
         // login settings
         'auth' => [
             'id' => 'admin',
