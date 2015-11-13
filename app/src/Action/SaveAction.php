@@ -64,6 +64,11 @@ EOT;
         }
 
         $input['host'] = gethostbyaddr($request->getIp());
+        if (!$this->checkConsecutivePost($input)) {
+            $this->flash->addMessage('errorMessage', '時間をおいて書き込んでください。');
+            return $response->withRedirect('/');
+        }
+
         $data = $this->formatInput($input);
 
         try {
@@ -150,4 +155,17 @@ EOT;
         ];
     }
 
+    public function checkConsecutivePost($data)
+    {
+        $time = $this->config->getConfig('consecutive');
+        $log = $this->log->dataReadWithNo(0);
+        $pre_date = \DateTime::createFromFormat('Y-m-d H:i:s', $log->created);
+        $check_date = new \DateTime("$time sec ago");
+
+        if ($log->host === $data['host'] && $pre_date < $check_date) {
+            return true;
+        }
+
+        return false;
+    }
 }

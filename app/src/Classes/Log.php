@@ -14,6 +14,13 @@ class Log {
         $this->log_max  = $max;
     }
 
+    public function dataReadWithNo($no)
+    {
+        $data = $this->dataRead();
+        $datum = array_splice($data, $no, 1);
+        return $datum[0];
+    }
+
     public function dataReadWithPage($page, $num)
     {
         $page = (int)$page;
