@@ -1,2 +1,5 @@
 vendor
 composer.lock
+log/app.log
+cache/*
+dat/past/*
