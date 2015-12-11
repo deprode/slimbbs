@@ -18,6 +18,9 @@ class Log {
     {
         $data = $this->dataRead();
         $datum = array_splice($data, $no, 1);
+        if (count($datum) === 0) {
+            return null;
+        }
         return $datum[0];
     }
 

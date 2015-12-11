@@ -157,8 +157,11 @@ EOT;
 
     public function checkConsecutivePost($data)
     {
-        $time = $this->config->getConfig('consecutive');
         $log = $this->log->dataReadWithNo(0);
+        if ($log === null) {
+            return true;
+        }
+        $time = $this->config->getConfig('consecutive');
         $pre_date = \DateTime::createFromFormat('Y-m-d H:i:s', $log->created);
         $check_date = new \DateTime("$time sec ago");
 
