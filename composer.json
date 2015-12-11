@@ -8,12 +8,13 @@
         }
     },
     "require": {
-        "slim/slim": "^3.0@beta",
+        "slim/slim": "^3.0",
         "slim/twig-view": "^1.1",
         "slim/flash": "^0.1.0",
         "monolog/monolog": "^1.13",
         "slim/csrf": "^0.4.0",
         "fuelphp/validation": "^2.0",
-        "akrabat/rka-slim-session-middleware": "dev-master"
+        "akrabat/rka-slim-session-middleware": "dev-master",
+        "akrabat/rka-ip-address-middleware": "^0.4.0"
     }
 }

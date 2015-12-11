@@ -63,7 +63,7 @@ EOT;
             return $response->withRedirect('/');
         }
 
-        $input['host'] = gethostbyaddr($request->getIp());
+        $input['host'] = gethostbyaddr($request->getAttribute('ip_address'));
         if (!$this->checkConsecutivePost($input)) {
             $this->flash->addMessage('errorMessage', '時間をおいて書き込んでください。');
             return $response->withRedirect('/');

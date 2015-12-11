@@ -9,3 +9,6 @@ $guard->setFailureCallable(function ($request, $response, $next) {
 });
 $app->add($guard);
 
+$app->add(
+    new \RKA\Middleware\IpAddress()
+);
