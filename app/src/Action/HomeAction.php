@@ -25,6 +25,15 @@ final class HomeAction
         $this->log     = $log;
     }
 
+    public function dataSplice($data, $page, $per_page)
+    {
+        if ($data) {
+            $data = array_splice($data, $page * $per_page, $per_page);
+        }
+
+        return $data;
+    }
+
     public function dispatch($request, $response, $args)
     {
         $this->logger->info("Home page action dispatched");
@@ -36,10 +45,10 @@ final class HomeAction
         $name = $request->getParam('name');
 
         $page = $request->getParam('page');
-        $data = $this->log->dataRead();
-        $data_count = count($data);
         $per_page = 10;
-        $data = array_splice($data, $page * $per_page, $per_page);
+        $all_data = $this->log->dataRead();
+        $data_count = count($all_data);
+        $data = $this->dataSplice($all_data, $page, $per_page);
 
         $message = $this->flash->getMessage('resultMessage');
         $error = $this->flash->getMessage('errorMessage');

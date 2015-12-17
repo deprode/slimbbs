@@ -56,11 +56,16 @@
             <div>
             {% set offset = current_page * per_page %}
 {% spaceless %}
-                {{ count }}件の書き込み中{{ offset+1 }}
-                {% if count > (offset + per_page) %}
-                    〜{{ offset + per_page }}
+                {% if count == 0 %}
+                    まだ書き込みはありません。
+                {% else %}
+                    {{ count }}件の書き込み中
+                    {{ offset+1 }}
+                    {% if count > (offset + per_page) %}
+                        〜{{ offset + per_page }}
+                    {% endif %}
+                    番目を表示
                 {% endif %}
-                番目を表示
 {% endspaceless %}
             </div>
             <hr>
