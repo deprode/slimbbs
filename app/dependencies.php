@@ -133,3 +133,14 @@ $container['App\Action\AdminDeleteAction'] = function ($c) {
        );
     return $action;
 };
+
+$container['App\Action\AdminConfigAction'] = function ($c) {
+    $action = new App\Action\AdminConfigAction(
+            $c->get('view'),
+            $c->get('logger'),
+            $c->get('validate'),
+            $c->get('flash'),
+            $c->get('config')
+       );
+    return $action;
+};

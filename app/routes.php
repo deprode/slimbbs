@@ -23,3 +23,8 @@ $app->post('/admin/', 'App\Action\AdminAction:dispatch')
 
 $app->post('/adel/', 'App\Action\AdminDeleteAction:dispatch')
     ->setName('admin_del');
+
+$app->get('/admin/config/', 'App\Action\AdminConfigAction:dispatch')
+    ->setName('admin_config');
+$app->post('/admin/config/save', 'App\Action\AdminConfigAction:save')
+    ->setName('admin_config_save');
