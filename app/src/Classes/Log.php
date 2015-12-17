@@ -45,7 +45,7 @@ class Log {
         if (is_null($path)) {
             $path = $this->log_path;
         }
-        file_put_contents($path, json_encode($data));
+        file_put_contents($path, json_encode($data), LOCK_EX);
     }
 
     public function saveData($formatted_input)
