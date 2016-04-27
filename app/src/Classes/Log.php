@@ -1,7 +1,8 @@
 <?php
 namespace App\Classes;
 
-class Log {
+class Log
+{
 
     private $log_path;
     private $past_dir;
@@ -135,7 +136,7 @@ class Log {
         // error
         if ($index < 0) {
             return false;
-        } elseif (!is_null($del_pass) && !password_verify((string)$del_pass, $data[$index]->del_pass) ) {
+        } elseif (!is_null($del_pass) && !password_verify((string)$del_pass, $data[$index]->del_pass)) {
             return false;
         }
 
@@ -161,4 +162,4 @@ class Log {
     {
         return $this->deleteData($id);
     }
-};
+}

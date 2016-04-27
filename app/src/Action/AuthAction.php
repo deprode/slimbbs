@@ -42,14 +42,15 @@ final class AuthAction
         $csrf_value = $request->getAttribute('csrf_value');
         $error = $this->flash->getMessage('errorMessage');
 
-        $this->view->render($response,
-                            'auth.twig',
-                            [
-                                'csrf_name' => $csrf_name,
-                                'csrf_value' => $csrf_value,
-                                'error' => $error[0]
-                            ]
-                            );
+        $this->view->render(
+            $response,
+            'auth.twig',
+            [
+                'csrf_name' => $csrf_name,
+                'csrf_value' => $csrf_value,
+                'error' => $error[0]
+            ]
+        );
         return $response;
     }
 }

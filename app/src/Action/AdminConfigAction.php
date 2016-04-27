@@ -37,15 +37,16 @@ final class AdminConfigAction
 
         $error = $this->flash->getMessage('errorMessage');
 
-        $this->view->render($response,
-                            'config.twig',
-                            [
-                                'csrf_name' => $csrf_name,
-                                'csrf_value' => $csrf_value,
-                                'config' => $configs,
-                                'error' => $error[0]
-                            ]
-                            );
+        $this->view->render(
+            $response,
+            'config.twig',
+            [
+                'csrf_name' => $csrf_name,
+                'csrf_value' => $csrf_value,
+                'config' => $configs,
+                'error' => $error[0]
+            ]
+        );
         return $response;
     }
 
@@ -91,7 +92,7 @@ final class AdminConfigAction
         $ngword = $input["ngword"];
         $consecutive = $input["consecutive"];
 
-        $ngword = array_filter($ngword, function($var) {
+        $ngword = array_filter($ngword, function ($var) {
             return !empty($var);
         });
 

@@ -67,57 +67,57 @@ $container['logger'] = function ($c) {
 
 $container['App\Action\HomeAction'] = function ($c) {
     $action = new App\Action\HomeAction(
-            $c->get('view'),
-            $c->get('logger'),
-            $c->get('session'),
-            $c->get('flash'),
-            $c->get('log')
-       );
+        $c->get('view'),
+        $c->get('logger'),
+        $c->get('session'),
+        $c->get('flash'),
+        $c->get('log')
+    );
     return $action;
 };
 
 $container['App\Action\SaveAction'] = function ($c) {
     $action = new App\Action\SaveAction(
-            $c->get('view'),
-            $c->get('logger'),
-            $c->get('validate'),
-            $c->get('session'),
-            $c->get('flash'),
-            $c->get('log'),
-            $c->get('config')
-       );
+        $c->get('view'),
+        $c->get('logger'),
+        $c->get('validate'),
+        $c->get('session'),
+        $c->get('flash'),
+        $c->get('log'),
+        $c->get('config')
+    );
     return $action;
 };
 
 $container['App\Action\DeleteAction'] = function ($c) {
     $action = new App\Action\DeleteAction(
-            $c->get('view'),
-            $c->get('logger'),
-            $c->get('validate'),
-            $c->get('flash'),
-            $c->get('log')
-       );
+        $c->get('view'),
+        $c->get('logger'),
+        $c->get('validate'),
+        $c->get('flash'),
+        $c->get('log')
+    );
     return $action;
 };
 
 $container['App\Action\AuthAction'] = function ($c) {
     $action = new App\Action\AuthAction(
-            $c->get('view'),
-            $c->get('logger'),
-            $c->get('session'),
-            $c->get('flash')
-       );
+        $c->get('view'),
+        $c->get('logger'),
+        $c->get('session'),
+        $c->get('flash')
+    );
     return $action;
 };
 
 $container['App\Action\AdminAction'] = function ($c) {
     $action = new App\Action\AdminAction(
-            $c->get('view'),
-            $c->get('logger'),
-            $c->get('session'),
-            $c->get('flash'),
-            $c->get('log')
-       );
+        $c->get('view'),
+        $c->get('logger'),
+        $c->get('session'),
+        $c->get('flash'),
+        $c->get('log')
+    );
     $settings = $c->get('settings');
     $action->setAdminAuth($settings['auth']['id'], $settings['auth']['password']);
     return $action;
@@ -125,22 +125,22 @@ $container['App\Action\AdminAction'] = function ($c) {
 
 $container['App\Action\AdminDeleteAction'] = function ($c) {
     $action = new App\Action\AdminDeleteAction(
-            $c->get('view'),
-            $c->get('logger'),
-            $c->get('validate'),
-            $c->get('flash'),
-            $c->get('log')
-       );
+        $c->get('view'),
+        $c->get('logger'),
+        $c->get('validate'),
+        $c->get('flash'),
+        $c->get('log')
+    );
     return $action;
 };
 
 $container['App\Action\AdminConfigAction'] = function ($c) {
     $action = new App\Action\AdminConfigAction(
-            $c->get('view'),
-            $c->get('logger'),
-            $c->get('validate'),
-            $c->get('flash'),
-            $c->get('config')
-       );
+        $c->get('view'),
+        $c->get('logger'),
+        $c->get('validate'),
+        $c->get('flash'),
+        $c->get('config')
+    );
     return $action;
 };

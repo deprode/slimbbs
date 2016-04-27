@@ -65,15 +65,16 @@ final class AdminAction
 
         $data = $this->log->dataRead();
 
-        $this->view->render($response,
-                            'admin.twig',
-                            [
-                                'csrf_name' => $csrf_name,
-                                'csrf_value' => $csrf_value,
-                                'error' => $error[0],
-                                'data' => $data
-                            ]
-                            );
+        $this->view->render(
+            $response,
+            'admin.twig',
+            [
+                'csrf_name' => $csrf_name,
+                'csrf_value' => $csrf_value,
+                'error' => $error[0],
+                'data' => $data
+            ]
+        );
         return $response;
     }
 }

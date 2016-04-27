@@ -22,8 +22,15 @@ final class SaveAction
 
     private $cached_errors;
 
-    public function __construct(Twig $view, LoggerInterface $logger, Validator $validate, Session $session, Messages $flash, Log $log, Config $config)
-    {
+    public function __construct(
+        Twig $view,
+        LoggerInterface $logger,
+        Validator $validate,
+        Session $session,
+        Messages $flash,
+        Log $log,
+        Config $config
+    ) {
         $this->view     = $view;
         $this->logger   = $logger;
         $this->validate = $validate;

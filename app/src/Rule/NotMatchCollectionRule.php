@@ -11,7 +11,7 @@ class NotMatchCollectionRule extends \Fuel\Validation\AbstractRule
     {
         $params = $this->getParameter();
 
-        $result = array_filter($params, function ($var) use ($value){
+        $result = array_filter($params, function ($var) use ($value) {
             return mb_strpos($value, $var) !== false;
         });
 
@@ -20,8 +20,7 @@ class NotMatchCollectionRule extends \Fuel\Validation\AbstractRule
 
     public function setParameter($params)
     {
-        if (!is_array($params))
-        {
+        if (!is_array($params)) {
             $params = array($params);
         }
 
