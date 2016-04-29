@@ -30,35 +30,29 @@ final class AdminDeleteAction
     {
         $this->logger->info("Deletes page action dispatched");
 
+        // CSRFチェック
         if ($request->getAttribute('csrf_status') === false) {
-            $failed = <<<EOT
-<!DOCTYPE html>
-<html>
-<head><title>CSRF test</title></head>
-<body>
-    <h1>Error</h1>
-    <p>An error occurred with your form submission.
-       Please start again.</p>
-</body>
-</html>
-EOT;
+            $failed = $this->getCSRFValidMessage();
             return $response->write($failed);
         }
+        
         $input = $request->getParsedBody();
 
+        // Validation
         if (!$this->validation($input)) {
             $mes = $this->getValidationMessage();
             $this->flash->addMessage('errorMessage', $mes);
             return $response->withRedirect('/admin/');
         }
 
-
         $inputs = $request->getParsedBody();
+
+        // 投稿を削除
         $ids = $inputs['del'];
         if ($request->getAttribute('csrf_status') !== false && count($ids) > 0) {
             $count = 0;
             foreach ($ids as $id) {
-                $count += $this->log->deleteDataForAdming($id);
+                $count += $this->log->deleteDataForAdmin($id);
             }
             $message = $this->flash->getMessage($this->getResultMessage($count));
             $this->logger->info("Admin deleted $count posts");
@@ -99,5 +93,21 @@ EOT;
             $mes = $mes . '' . $error . PHP_EOL;
         }
         return $mes;
+    }
+    
+    public function getCSRFValidMessage()
+    {
+        $failed = <<<EOT
+<!DOCTYPE html>
+<html>
+<head><title>CSRF test</title></head>
+<body>
+    <h1>Error</h1>
+    <p>An error occurred with your form submission.
+       Please start again.</p>
+</body>
+</html>
+EOT;
+        return $failed;
     }
 }

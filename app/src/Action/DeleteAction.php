@@ -30,28 +30,22 @@ final class DeleteAction
     {
         $this->logger->info("Delete page action dispatched");
 
+        // CSRFチェック
         if ($request->getAttribute('csrf_status') === false) {
-            $failed = <<<EOT
-<!DOCTYPE html>
-<html>
-<head><title>CSRF test</title></head>
-<body>
-    <h1>Error</h1>
-    <p>An error occurred with your form submission.
-       Please start again.</p>
-</body>
-</html>
-EOT;
+            $failed = $this->getCSRFValidMessage();
             return $response->write($failed);
         }
+        
         $input = $request->getParsedBody();
 
+        // Validation
         if (!$this->validation($input)) {
             $mes = $this->getValidationMessage();
             $this->flash->addMessage('errorMessage', $mes);
             return $response->withRedirect('/');
         }
-
+        
+        // 投稿を削除
         $result = false;
         try {
             $result = $this->log->deleteDataForUser($input['id'], $input['del_pass']);
@@ -70,6 +64,7 @@ EOT;
         return $response->withRedirect('/');
     }
 
+    // Validation
     public function validation($input)
     {
         $this->validate->addField('id', 'ID')
@@ -98,5 +93,21 @@ EOT;
             $mes = $mes . '' . $error . PHP_EOL;
         }
         return $mes;
+    }
+    
+    public function getCSRFValidMessage()
+    {
+        $failed = <<<EOT
+<!DOCTYPE html>
+<html>
+<head><title>CSRF test</title></head>
+<body>
+    <h1>Error</h1>
+    <p>An error occurred with your form submission.
+       Please start again.</p>
+</body>
+</html>
+EOT;
+        return $failed;
     }
 }

@@ -36,9 +36,8 @@ $container['session'] = function ($c) {
 
 // Posts log
 $container['log'] = function ($c) {
-    $log = new \App\Classes\Log();
     $settings = $c->get('settings');
-    $log->setLogSetting($settings['log']['path'], $settings['log']['past'], $settings['log']['max']);
+    $log = new \App\Classes\Log($settings['log']['path'], $settings['log']['past'], $settings['log']['max']);
     return $log;
 };
 

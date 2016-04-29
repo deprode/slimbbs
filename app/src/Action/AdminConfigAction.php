@@ -33,6 +33,7 @@ final class AdminConfigAction
 
         $csrf_name = $request->getAttribute('csrf_name');
         $csrf_value = $request->getAttribute('csrf_value');
+        
         $configs = $this->config->getConfigs();
 
         $error = $this->flash->getMessage('errorMessage');
@@ -67,6 +68,24 @@ final class AdminConfigAction
         return $response->withRedirect('/admin/config/');
     }
 
+    // 入力をiniで保存するために配列に入れる
+    public function format($input)
+    {
+        $ngword = $input["ngword"];
+        $consecutive = $input["consecutive"];
+
+        $ngword = array_filter($ngword, function ($var) {
+            return !empty($var);
+        });
+
+        $data = [
+            'ngword' => $ngword,
+            'consecutive' => $consecutive
+        ];
+
+        return $data;
+    }
+
     public function validation($input)
     {
         $val = $this->validate;
@@ -86,24 +105,7 @@ final class AdminConfigAction
 
         return $result->isValid();
     }
-
-    public function format($input)
-    {
-        $ngword = $input["ngword"];
-        $consecutive = $input["consecutive"];
-
-        $ngword = array_filter($ngword, function ($var) {
-            return !empty($var);
-        });
-
-        $data = [
-            'ngword' => $ngword,
-            'consecutive' => $consecutive
-        ];
-
-        return $data;
-    }
-
+    
     public function getValidationMessage()
     {
         $mes = '';

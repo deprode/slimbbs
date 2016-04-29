@@ -64,12 +64,14 @@ EOT;
         $this->session->set('name', $input['name']);
         $this->session->set('email', $input['email']);
 
+        // Validation
         if (!$this->validation($input)) {
             $mes = $this->getValidationMessage();
             $this->flash->addMessage('errorMessage', $mes);
             return $response->withRedirect('/');
         }
 
+        // IPアドレスの取得
         $input['host'] = gethostbyaddr($request->getAttribute('ip_address'));
         if (!$this->checkConsecutivePost($input)) {
             $this->flash->addMessage('errorMessage', '時間をおいて書き込んでください。');
@@ -78,6 +80,7 @@ EOT;
 
         $data = $this->formatInput($input);
 
+        // ログの保存
         try {
             $this->log->saveData($data);
             $this->log->createDailyLog();
@@ -92,8 +95,10 @@ EOT;
         return $response->withRedirect('/');
     }
 
+    // Validation
     public function validation($input)
     {
+        // 投稿禁止ワードを読み込む
         $ngwords = $this->config->getConfig('ngword');
 
         $val = $this->validate;
@@ -139,11 +144,13 @@ EOT;
         return $mes;
     }
 
+    // パスワード生成
     public function createPassword($password)
     {
         return password_hash($password, PASSWORD_DEFAULT);
     }
 
+    // 保存用に入力を整形する
     public function formatInput($input)
     {
         $now = new \DateTime();
@@ -162,12 +169,14 @@ EOT;
         ];
     }
 
+    // 短時間に連続して書き込んでいるかチェックする
     public function checkConsecutivePost($data)
     {
         $log = $this->log->dataReadWithNo(0);
         if ($log === null) {
             return true;
         }
+        
         $time = $this->config->getConfig('consecutive');
         $pre_date = \DateTime::createFromFormat('Y-m-d H:i:s', $log->created);
         $check_date = new \DateTime("$time sec ago");

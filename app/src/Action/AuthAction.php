@@ -30,12 +30,14 @@ final class AuthAction
         return $this->renderAuth($request, $response, $args);
     }
 
+    // ログアウト処理
     public function logout($request, $response, $args)
     {
         $this->session->destroy();
         return $response->withRedirect('/');
     }
 
+    // ログイン画面
     public function renderAuth($request, $response, $args)
     {
         $csrf_name = $request->getAttribute('csrf_name');

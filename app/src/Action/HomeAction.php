@@ -15,6 +15,9 @@ final class HomeAction
     private $session;
 
     private $log;
+    
+    // 1ページに表示する投稿数
+    const DEFAULT_PER_PAFE = 10;
 
     public function __construct(Twig $view, LoggerInterface $logger, Session $session, Messages $flash, Log $log)
     {
@@ -25,7 +28,8 @@ final class HomeAction
         $this->log     = $log;
     }
 
-    public function dataSplice($data, $page, $per_page)
+    // データを表示するサイズに切り取る
+    public function dataSplice($data, $page, $per_page = self::DEFAULT_PER_PAFE)
     {
         if ($data) {
             $data = array_splice($data, $page * $per_page, $per_page);
@@ -34,18 +38,20 @@ final class HomeAction
         return $data;
     }
 
+    // ホーム画面（トップページ）の表示
     public function dispatch($request, $response, $args)
     {
         $this->logger->info("Home page action dispatched");
 
         $response = $response->withHeader('X-Frame-Options', 'SAMEORIGIN');
 
+        // CSRF
         $csrf_name = $request->getAttribute('csrf_name');
         $csrf_value = $request->getAttribute('csrf_value');
-        $name = $request->getParam('name');
 
+        // 表示するログの用意
         $page = $request->getParam('page');
-        $per_page = 10;
+        $per_page = self::DEFAULT_PER_PAFE;
         $all_data = $this->log->dataRead();
         $data_count = count($all_data);
         $data = $this->dataSplice($all_data, $page, $per_page);
@@ -53,6 +59,7 @@ final class HomeAction
         $message = $this->flash->getMessage('resultMessage');
         $error = $this->flash->getMessage('errorMessage');
 
+        // 書き込んだときの情報を読み込み
         $name = $this->session->get('name');
         $email = $this->session->get('email');
 

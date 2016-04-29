@@ -8,13 +8,15 @@ class Log
     private $past_dir;
     private $log_max;
 
-    public function setLogSetting($path, $past, $max)
+    // クラス設定
+    public function __construct($path, $past, $max)
     {
         $this->log_path = $path;
         $this->past_dir = $past;
         $this->log_max  = $max;
     }
 
+    // N番目の投稿を読み込む
     public function dataReadWithNo($no)
     {
         $data = $this->dataRead();
@@ -25,6 +27,7 @@ class Log
         return $datum[0];
     }
 
+    // 指定ページの投稿を読み込む
     public function dataReadWithPage($page, $num)
     {
         $page = (int)$page;
@@ -32,6 +35,7 @@ class Log
         return array_splice($data, $page * $num, $num);
     }
 
+    // 現在のログファイルから全てのデータの読み込み
     public function dataRead($path = null)
     {
         if (is_null($path)) {
@@ -41,6 +45,7 @@ class Log
         return json_decode($old_data);
     }
 
+    // 投稿の書き込み
     public function dataWrite($data, $path = null)
     {
         if (is_null($path)) {
@@ -49,6 +54,7 @@ class Log
         file_put_contents($path, json_encode($data), LOCK_EX);
     }
 
+    // 投稿を保存する
     public function saveData($formatted_input)
     {
         if (!is_readable($this->log_path)) {
@@ -58,7 +64,7 @@ class Log
         $data = $this->dataRead($this->log_path);
         $data = $this->insertInput($data, $formatted_input);
 
-        // $maxを超えた分を切る
+        // 最大保存数を超えた分を切る
         if (count($data) > $this->log_max) {
             array_splice($data, $this->log_max);
         }
@@ -66,6 +72,7 @@ class Log
         $this->dataWrite($data);
     }
 
+    // 投稿をログの先頭に入れる
     public function insertInput($data, $formatted_input)
     {
         if (is_array($data) && count($data) > 0) {
@@ -77,17 +84,21 @@ class Log
         return $data;
     }
 
+    // 日別ログのパスを取得
     private function getDailyLogPath($date_str = null)
     {
+        // パスがなければ今日の日付でパスを作成
         if (is_null($date_str)) {
             $date_str = date_format(date_create(), 'Ymd');
         }
+
         $date = new \DateTime();
         $filepath = $this->past_dir . '/' . $date_str . '.dat';
 
         return $filepath;
     }
 
+    // 日別ログファイルを作成
     public function createDailyLog()
     {
         if (!is_dir($this->past_dir)) {
@@ -95,11 +106,14 @@ class Log
         }
 
         $filepath = $this->getDailyLogPath();
+
+        // ログファイルがないときに作成
         if (!file_exists($filepath)) {
             touch($filepath);
         }
     }
 
+    // 日別ログに書き込み
     public function writeDailyLog($formatted_input)
     {
         if (!is_dir($this->past_dir)) {
@@ -114,6 +128,7 @@ class Log
         }
     }
 
+    // ログ内にある指定した投稿IDのインデックスを返す
     public function indexOfPostData($data, $id)
     {
         for ($i=0; $i < count($data); $i++) {
@@ -124,7 +139,8 @@ class Log
         return -1;
     }
 
-    public function deleteData($id, $del_pass = null)
+    // ログの削除
+    private function deleteData($id, $del_pass = null)
     {
         if (!is_readable($this->log_path)) {
             throw new Exception("log file is not found or not readable.");
@@ -133,17 +149,19 @@ class Log
         $data = $this->dataRead();
         $index = $this->indexOfPostData($data, $id);
 
-        // error
+        // エラーチェック
         if ($index < 0) {
+            // 投稿が見つからない
             return false;
         } elseif (!is_null($del_pass) && !password_verify((string)$del_pass, $data[$index]->del_pass)) {
+            // 削除パスが違う
             return false;
         }
 
         $del_data = array_splice($data, $index, 1);
         $this->dataWrite($data);
 
-        // 過去ログ
+        // 日別ログから削除
         $past_log = $this->past_dir . '/' . date_format(date_create($del_data->created), 'Ymd') . '.dat';
         $past_data = $this->dataRead($past_log);
         $index = $this->indexOfPostData($past_data, $id);
@@ -153,12 +171,14 @@ class Log
         return true;
     }
 
+    // 削除（ユーザ側からパスをつけて呼ぶ）
     public function deleteDataForUser($id, $del_pass)
     {
         return $this->deleteData($id, $del_pass);
     }
 
-    public function deleteDataForAdming($id)
+    // 削除（管理側からパスなしで呼ぶ）
+    public function deleteDataForAdmin($id)
     {
         return $this->deleteData($id);
     }
