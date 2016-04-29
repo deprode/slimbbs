@@ -35,7 +35,7 @@ final class DeleteAction
             $failed = $this->getCSRFValidMessage();
             return $response->write($failed);
         }
-        
+
         $input = $request->getParsedBody();
 
         // Validation
@@ -44,7 +44,7 @@ final class DeleteAction
             $this->flash->addMessage('errorMessage', $mes);
             return $response->withRedirect('/');
         }
-        
+
         // 投稿を削除
         $result = false;
         try {
@@ -54,10 +54,10 @@ final class DeleteAction
         }
 
         if ($result === true) {
-            $this->logger->info("deleted success ".$input['no']);
+            $this->logger->info("deleted success ".$input['id']);
             $this->flash->addMessage('resultMessage', '削除に成功しました');
         } else {
-            $this->logger->info("deleted failed ".$input['no']);
+            $this->logger->info("deleted failed ".$input['id']);
             $this->flash->addMessage('resultMessage', '削除に失敗しました');
         }
 
@@ -94,7 +94,7 @@ final class DeleteAction
         }
         return $mes;
     }
-    
+
     public function getCSRFValidMessage()
     {
         $failed = <<<EOT

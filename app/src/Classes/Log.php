@@ -159,14 +159,17 @@ class Log
         }
 
         $del_data = array_splice($data, $index, 1);
+        $del_data = $del_data[0];
         $this->dataWrite($data);
 
         // 日別ログから削除
-        $past_log = $this->past_dir . '/' . date_format(date_create($del_data->created), 'Ymd') . '.dat';
-        $past_data = $this->dataRead($past_log);
-        $index = $this->indexOfPostData($past_data, $id);
-        array_splice($past_data, $index, 1);
-        $this->dataWrite($past_data, $past_log);
+        if (isset($this->past_dir)) {
+            $past_log = $this->past_dir . '/' . date_format(date_create($del_data->created), 'Ymd') . '.dat';
+            $past_data = $this->dataRead($past_log);
+            $index = $this->indexOfPostData($past_data, $id);
+            array_splice($past_data, $index, 1);
+            $this->dataWrite($past_data, $past_log);
+        }
 
         return true;
     }
