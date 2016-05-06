@@ -6,6 +6,7 @@ use Psr\Log\LoggerInterface;
 use Fuel\Validation\Validator;
 use Slim\Flash\Messages;
 use App\Classes\Log;
+use App\Traits\Validation;
 
 final class DeleteAction
 {
@@ -15,7 +16,9 @@ final class DeleteAction
     private $flash;
     private $log;
 
-    private $cached_errors;
+    use Validation {
+        Validation::__construct as private __vConstruct;
+    }
 
     public function __construct(Twig $view, LoggerInterface $logger, Validator $validate, Messages $flash, Log $log)
     {
@@ -24,6 +27,8 @@ final class DeleteAction
         $this->validate = $validate;
         $this->flash    = $flash;
         $this->log      = $log;
+
+        $this->__vConstruct();
     }
 
     public function dispatch($request, $response, $args)
@@ -39,7 +44,7 @@ final class DeleteAction
         $input = $request->getParsedBody();
 
         // Validation
-        if (!$this->validation($input)) {
+        if (!$this->validation($this->validate, $input)) {
             $mes = $this->getValidationMessage();
             $this->flash->addMessage('errorMessage', $mes);
             return $response->withRedirect('/');
@@ -65,9 +70,9 @@ final class DeleteAction
     }
 
     // Validation
-    public function validation($input)
+    public function validation($val, $input)
     {
-        $this->validate->addField('id', 'ID')
+        $val->addField('id', 'ID')
                            ->required()
                                ->setMessage('{label}は必須です。')
                            ->Regex('/[0-9a-zA-Z]/')
@@ -78,21 +83,11 @@ final class DeleteAction
                            ->Regex('/\w/')
                                ->setMessage('{label}が一致しません。');
 
-        $result = $this->validate->run($input);
+        $result = $val->run($input);
 
         $this->cached_errors = $result->getErrors();
 
         return $result->isValid();
-    }
-
-    public function getValidationMessage()
-    {
-        $mes = '';
-        $errors = $this->cached_errors;
-        foreach ($errors as $error) {
-            $mes = $mes . '' . $error . PHP_EOL;
-        }
-        return $mes;
     }
 
     public function getCSRFValidMessage()

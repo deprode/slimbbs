@@ -8,6 +8,7 @@ use RKA\Session;
 use Slim\Flash\Messages;
 use App\Classes\Log;
 use App\Classes\Config;
+use App\Traits\Validation;
 
 final class SaveAction
 {
@@ -20,7 +21,9 @@ final class SaveAction
 
     private $log;
 
-    private $cached_errors;
+    use Validation {
+        Validation::__construct as private __vConstruct;
+    }
 
     public function __construct(
         Twig $view,
@@ -38,6 +41,7 @@ final class SaveAction
         $this->flash    = $flash;
         $this->log      = $log;
         $this->config   = $config;
+        $this->__vConstruct();
     }
 
     public function dispatch($request, $response, $args)
@@ -65,7 +69,7 @@ EOT;
         $this->session->set('email', $input['email']);
 
         // Validation
-        if (!$this->validation($input)) {
+        if (!$this->validation($this->validate, $input)) {
             $mes = $this->getValidationMessage();
             $this->flash->addMessage('errorMessage', $mes);
             return $response->withRedirect('/');
@@ -96,12 +100,11 @@ EOT;
     }
 
     // Validation
-    public function validation($input)
+    public function validation($val, $input)
     {
         // 投稿禁止ワードを読み込む
         $ngwords = $this->config->getConfig('ngword');
 
-        $val = $this->validate;
         $val->addCustomRule('notMatchCollectionRule', '\App\Rule\NotMatchCollectionRule');
 
         $val->addField('name', '名前')
@@ -127,21 +130,11 @@ EOT;
                ->Regex('/\w/')
                ->setMessage('{label} は英数字とアンダースコアを使ってください。');
 
-        $result = $this->validate->run($input);
+        $result = $val->run($input);
 
         $this->cached_errors = $result->getErrors();
 
         return $result->isValid();
-    }
-
-    public function getValidationMessage()
-    {
-        $mes = '';
-        $errors = $this->cached_errors;
-        foreach ($errors as $error) {
-            $mes = $mes . '' . $error . PHP_EOL;
-        }
-        return $mes;
     }
 
     // パスワード生成
@@ -176,7 +169,7 @@ EOT;
         if ($log === null) {
             return true;
         }
-        
+
         $time = $this->config->getConfig('consecutive');
         $pre_date = \DateTime::createFromFormat('Y-m-d H:i:s', $log->created);
         $check_date = new \DateTime("$time sec ago");

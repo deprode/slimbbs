@@ -6,6 +6,7 @@ use Psr\Log\LoggerInterface;
 use Fuel\Validation\Validator;
 use Slim\Flash\Messages;
 use App\Classes\Config;
+use App\Traits\Validation;
 
 final class AdminConfigAction
 {
@@ -14,7 +15,10 @@ final class AdminConfigAction
     private $flash;
     private $validate;
     private $config;
-    private $cached_errors;
+
+    use Validation {
+        Validation::__construct as private __vConstruct;
+    }
 
     public function __construct(Twig $view, LoggerInterface $logger, Validator $validate, Messages $flash, Config $config)
     {
@@ -23,6 +27,8 @@ final class AdminConfigAction
         $this->validate = $validate;
         $this->flash   = $flash;
         $this->config  = $config;
+
+        $this->__vConstruct();
     }
 
     public function dispatch($request, $response, $args)
@@ -33,7 +39,7 @@ final class AdminConfigAction
 
         $csrf_name = $request->getAttribute('csrf_name');
         $csrf_value = $request->getAttribute('csrf_value');
-        
+
         $configs = $this->config->getConfigs();
 
         $error = $this->flash->getMessage('errorMessage');
@@ -55,7 +61,7 @@ final class AdminConfigAction
     {
         $input = $request->getParsedBody();
 
-        if (!$this->validation($input)) {
+        if (!$this->validation($this->validate, $input)) {
             $mes = $this->getValidationMessage();
             $this->flash->addMessage('errorMessage', $mes);
             return $response->withRedirect('/admin/config/');
@@ -86,9 +92,8 @@ final class AdminConfigAction
         return $data;
     }
 
-    public function validation($input)
+    public function validation($val, $input)
     {
-        $val = $this->validate;
         $val->addCustomRule('isArray', '\App\Rule\IsArrayRule');
         $val->addField('consecutive', '投稿間隔')
                    ->required()
@@ -99,20 +104,10 @@ final class AdminConfigAction
                    ->isArray()
                        ->setMessage('禁止ワードが不正な形式です');
 
-        $result = $this->validate->run($input);
+        $result = $val->run($input);
 
         $this->cached_errors = $result->getErrors();
 
         return $result->isValid();
-    }
-    
-    public function getValidationMessage()
-    {
-        $mes = '';
-        $errors = $this->cached_errors;
-        foreach ($errors as $error) {
-            $mes = $mes . '' . $error . PHP_EOL;
-        }
-        return $mes;
     }
 }

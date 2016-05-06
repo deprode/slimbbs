@@ -6,6 +6,7 @@ use Psr\Log\LoggerInterface;
 use Fuel\Validation\Validator;
 use Slim\Flash\Messages;
 use App\Classes\Log;
+use App\Traits\Validation;
 
 final class AdminDeleteAction
 {
@@ -15,7 +16,9 @@ final class AdminDeleteAction
     private $flash;
     private $log;
 
-    private $cached_errors;
+    use Validation {
+        Validation::__construct as private __vConstruct;
+    }
 
     public function __construct(Twig $view, LoggerInterface $logger, Validator $validate, Messages $flash, Log $log)
     {
@@ -24,6 +27,8 @@ final class AdminDeleteAction
         $this->validate = $validate;
         $this->flash    = $flash;
         $this->log      = $log;
+
+        $this->__vConstruct();
     }
 
     public function dispatch($request, $response, $args)
@@ -35,11 +40,11 @@ final class AdminDeleteAction
             $failed = $this->getCSRFValidMessage();
             return $response->write($failed);
         }
-        
+
         $input = $request->getParsedBody();
 
         // Validation
-        if (!$this->validation($input)) {
+        if (!$this->validation($this->validate, $input)) {
             $mes = $this->getValidationMessage();
             $this->flash->addMessage('errorMessage', $mes);
             return $response->withRedirect('/admin/');
@@ -48,7 +53,7 @@ final class AdminDeleteAction
         $inputs = $request->getParsedBody();
 
         // 投稿を削除
-        $ids = $inputs['del'];
+        $ids = (isset($inputs['del'])) ? $inputs['del'] : [];
         if ($request->getAttribute('csrf_status') !== false && count($ids) > 0) {
             $count = 0;
             foreach ($ids as $id) {
@@ -70,31 +75,20 @@ final class AdminDeleteAction
         }
     }
 
-    public function validation($input)
+    public function validation($val, $input)
     {
-        $val = $this->validate;
         $val->addCustomRule('arrayRule', '\App\Rule\ArrayRule');
         $val->addField('del', 'ID')
                    ->arrayRule()
                        ->setMessage('IDは必須です。');
 
-        $result = $this->validate->run($input);
+        $result = $val->run($input);
 
         $this->cached_errors = $result->getErrors();
 
         return $result->isValid();
     }
 
-    public function getValidationMessage()
-    {
-        $mes = '';
-        $errors = $this->cached_errors;
-        foreach ($errors as $error) {
-            $mes = $mes . '' . $error . PHP_EOL;
-        }
-        return $mes;
-    }
-    
     public function getCSRFValidMessage()
     {
         $failed = <<<EOT
