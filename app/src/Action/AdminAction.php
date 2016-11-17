@@ -70,6 +70,7 @@ final class AdminAction
         $csrf_value = $request->getAttribute('csrf_value');
 
         $error = $this->flash->getMessage('errorMessage');
+        $message = $this->flash->getMessage('resultMessage');
 
         $data = $this->log->dataRead();
 
@@ -80,6 +81,7 @@ final class AdminAction
                 'csrf_name' => $csrf_name,
                 'csrf_value' => $csrf_value,
                 'error' => $error[0],
+                'message' => $message[0],
                 'data' => $data
             ]
         );

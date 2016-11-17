@@ -33,6 +33,12 @@
                 </div>
                 <hr>
                 {% endif %}
+                {% if message %}
+                <div>
+                    {{ message | nl2br }}
+                </div>
+                <hr>
+                {% endif %}
                     <div>
                     <form action="{{ path_for('admin_del') }}" method="post" accept-charset="utf-8">
                         <input type="hidden" name="csrf_name" value="{{ csrf_name }}">

@@ -59,7 +59,7 @@ final class AdminDeleteAction
             foreach ($ids as $id) {
                 $count += $this->log->deleteDataForAdmin($id);
             }
-            $message = $this->flash->getMessage($this->getResultMessage($count));
+            $this->flash->addMessage('resultMessage', $this->getResultMessage($count));
             $this->logger->info("Admin deleted $count posts");
         }
 
