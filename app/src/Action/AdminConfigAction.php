@@ -31,7 +31,7 @@ final class AdminConfigAction
         $this->__vConstruct();
     }
 
-    public function dispatch($request, $response, $args)
+    public function dispatch($request, $response)
     {
         $this->logger->info("Config page action dispatched");
 
@@ -57,7 +57,7 @@ final class AdminConfigAction
         return $response;
     }
 
-    public function save($request, $response, $args)
+    public function save($request, $response)
     {
         $input = $request->getParsedBody();
 

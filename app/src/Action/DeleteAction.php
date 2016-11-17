@@ -31,7 +31,7 @@ final class DeleteAction
         $this->__vConstruct();
     }
 
-    public function dispatch($request, $response, $args)
+    public function dispatch($request, $response)
     {
         $this->logger->info("Delete page action dispatched");
 

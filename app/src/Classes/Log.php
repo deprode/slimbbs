@@ -17,10 +17,10 @@ class Log
     }
 
     // N番目の投稿を読み込む
-    public function dataReadWithNo($no)
+    public function dataReadWithNo($post_no)
     {
         $data = $this->dataRead();
-        $datum = array_splice($data, $no, 1);
+        $datum = array_splice($data, $post_no, 1);
         if (count($datum) === 0) {
             return null;
         }

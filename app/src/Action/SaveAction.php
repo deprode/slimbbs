@@ -44,7 +44,7 @@ final class SaveAction
         $this->__vConstruct();
     }
 
-    public function dispatch($request, $response, $args)
+    public function dispatch($request, $response)
     {
         $this->logger->info("Save page action dispatched");
 

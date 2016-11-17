@@ -31,7 +31,7 @@ final class AdminDeleteAction
         $this->__vConstruct();
     }
 
-    public function dispatch($request, $response, $args)
+    public function dispatch($request, $response)
     {
         $this->logger->info("Deletes page action dispatched");
 

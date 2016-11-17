@@ -15,7 +15,7 @@ final class HomeAction
     private $session;
 
     private $log;
-    
+
     // 1ページに表示する投稿数
     const DEFAULT_PER_PAFE = 10;
 
@@ -39,7 +39,7 @@ final class HomeAction
     }
 
     // ホーム画面（トップページ）の表示
-    public function dispatch($request, $response, $args)
+    public function dispatch($request, $response)
     {
         $this->logger->info("Home page action dispatched");
 

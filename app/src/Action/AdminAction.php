@@ -27,13 +27,13 @@ final class AdminAction
         $this->log     = $log;
     }
 
-    public function setAdminAuth($id, $password)
+    public function setAdminAuth($admin_id, $password)
     {
-        $this->admin_id = $id;
+        $this->admin_id = $admin_id;
         $this->admin_pass = $password;
     }
 
-    public function dispatch($request, $response, $args)
+    public function dispatch($request, $response)
     {
         // 認証されたとき
         if (!$this->session->get('auth')) {
@@ -41,36 +41,36 @@ final class AdminAction
             if ($request->getAttribute('csrf_status') === false) {
                 return $response->withRedirect('/');
             }
-            
+
             $inputs = $request->getParsedBody();
-            $id = $inputs['id'];
+            $admin_id = $inputs['id'];
             $password = $inputs['password'];
 
             // IDとパスワードのチェック
-            if ((string)$id !== $this->admin_id && !password_verify($password, $this->admin_pass)) {
+            if ((string)$admin_id !== $this->admin_id && !password_verify($password, $this->admin_pass)) {
                 $this->flash->addMessage('errorMessage', 'IDかパスワードが間違っています。');
                 return $response->withRedirect('/auth/');
             }
-            
+
             $this->session->regenerate();
             // 認証情報の設定
-            $this->session->set('userid', $id);
+            $this->session->set('userid', $admin_id);
             $this->session->set('auth', true);
 
-            $this->logger->info("Admin $id logged in");
+            $this->logger->info("Admin $admin_id logged in");
         }
 
-        return $this->renderAdmin($request, $response, $args);
+        return $this->renderAdmin($request, $response);
     }
 
     // 管理画面を描画
-    public function renderAdmin($request, $response, $args)
+    public function renderAdmin($request, $response)
     {
         $csrf_name = $request->getAttribute('csrf_name');
         $csrf_value = $request->getAttribute('csrf_value');
 
         $error = $this->flash->getMessage('errorMessage');
-        
+
         $data = $this->log->dataRead();
 
         $this->view->render(

@@ -13,8 +13,6 @@ final class AuthAction
     private $session;
     private $flash;
 
-    private $log_path;
-
     public function __construct(Twig $view, LoggerInterface $logger, Session $session, Messages $flash)
     {
         $this->view = $view;
@@ -23,22 +21,22 @@ final class AuthAction
         $this->flash = $flash;
     }
 
-    public function dispatch($request, $response, $args)
+    public function dispatch($request, $response)
     {
         $this->logger->info("Auth");
 
-        return $this->renderAuth($request, $response, $args);
+        return $this->renderAuth($request, $response);
     }
 
     // ログアウト処理
-    public function logout($request, $response, $args)
+    public function logout($request, $response)
     {
         $this->session->destroy();
         return $response->withRedirect('/');
     }
 
     // ログイン画面
-    public function renderAuth($request, $response, $args)
+    public function renderAuth($request, $response)
     {
         $csrf_name = $request->getAttribute('csrf_name');
         $csrf_value = $request->getAttribute('csrf_value');
