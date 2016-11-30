@@ -1,6 +1,8 @@
 <?php
 namespace App\Action;
 
+use Slim\Http\Request;
+use Slim\Http\Response;
 use Slim\Views\Twig;
 use Psr\Log\LoggerInterface;
 use RKA\Session;
@@ -21,7 +23,7 @@ final class AuthAction
         $this->flash = $flash;
     }
 
-    public function dispatch($request, $response)
+    public function dispatch(Request $request, Response $response)
     {
         $this->logger->info("Auth");
 
@@ -29,14 +31,14 @@ final class AuthAction
     }
 
     // ログアウト処理
-    public function logout($request, $response)
+    public function logout(Request $request, Response $response)
     {
         $this->session->destroy();
         return $response->withRedirect('/');
     }
 
     // ログイン画面
-    public function renderAuth($request, $response)
+    public function renderAuth(Request $request, Response $response)
     {
         $csrf_name = $request->getAttribute('csrf_name');
         $csrf_value = $request->getAttribute('csrf_value');

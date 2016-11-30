@@ -1,6 +1,8 @@
 <?php
 namespace App\Action;
 
+use Slim\Http\Request;
+use Slim\Http\Response;
 use Slim\Views\Twig;
 use Psr\Log\LoggerInterface;
 use Fuel\Validation\Validator;
@@ -31,7 +33,7 @@ final class AdminDeleteAction
         $this->__vConstruct();
     }
 
-    public function dispatch($request, $response)
+    public function dispatch(Request $request, Response $response)
     {
         $this->logger->info("Deletes page action dispatched");
 
@@ -75,7 +77,7 @@ final class AdminDeleteAction
         }
     }
 
-    public function validation($val, $input)
+    public function validation(Validator $val, $input)
     {
         $val->addCustomRule('arrayRule', '\App\Rule\ArrayRule');
         $val->addField('del', 'ID')

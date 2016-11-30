@@ -1,6 +1,8 @@
 <?php
 namespace App\Action;
 
+use Slim\Http\Request;
+use Slim\Http\Response;
 use Slim\Views\Twig;
 use Psr\Log\LoggerInterface;
 use Fuel\Validation\Validator;
@@ -44,7 +46,7 @@ final class SaveAction
         $this->__vConstruct();
     }
 
-    public function dispatch($request, $response)
+    public function dispatch(Request $request, Response $response)
     {
         $this->logger->info("Save page action dispatched");
 
@@ -90,7 +92,7 @@ EOT;
             $this->log->createDailyLog();
             $this->log->writeDailyLog($data);
             $this->logger->info("saved log");
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return $response->write('log file is not found or not readable.');
         }
 
@@ -100,7 +102,7 @@ EOT;
     }
 
     // Validation
-    public function validation($val, $input)
+    public function validation(Validator $val, $input)
     {
         // 投稿禁止ワードを読み込む
         $ngwords = $this->config->getConfig('ngword');

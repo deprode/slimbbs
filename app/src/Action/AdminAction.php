@@ -1,6 +1,8 @@
 <?php
 namespace App\Action;
 
+use Slim\Http\Request;
+use Slim\Http\Response;
 use Slim\Views\Twig;
 use Psr\Log\LoggerInterface;
 use RKA\Session;
@@ -33,7 +35,7 @@ final class AdminAction
         $this->admin_pass = $password;
     }
 
-    public function dispatch($request, $response)
+    public function dispatch(Request $request, Response $response)
     {
         // 認証されたとき
         if (!$this->session->get('auth')) {
@@ -64,7 +66,7 @@ final class AdminAction
     }
 
     // 管理画面を描画
-    public function renderAdmin($request, $response)
+    public function renderAdmin(Request $request, Response $response)
     {
         $csrf_name = $request->getAttribute('csrf_name');
         $csrf_value = $request->getAttribute('csrf_value');

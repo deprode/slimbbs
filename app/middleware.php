@@ -3,7 +3,7 @@
 
 // CSRFミドルウェアの設定
 $guard = new Slim\Csrf\Guard();
-$guard->setFailureCallable(function ($request, $response, $next) {
+$guard->setFailureCallable(function (\Slim\Http\Request $request, \Slim\Http\Response $response, $next) {
     $request = $request->withAttribute("csrf_status", false);
     return $next($request, $response);
 });

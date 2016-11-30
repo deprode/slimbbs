@@ -1,6 +1,8 @@
 <?php
 namespace App\Action;
 
+use Slim\Http\Request;
+use Slim\Http\Response;
 use Slim\Views\Twig;
 use Psr\Log\LoggerInterface;
 use Fuel\Validation\Validator;
@@ -31,7 +33,7 @@ final class DeleteAction
         $this->__vConstruct();
     }
 
-    public function dispatch($request, $response)
+    public function dispatch(Request $request, Response $response)
     {
         $this->logger->info("Delete page action dispatched");
 
@@ -54,7 +56,7 @@ final class DeleteAction
         $result = false;
         try {
             $result = $this->log->deleteDataForUser($input['id'], $input['del_pass']);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return $response->write($e->getMessage());
         }
 
@@ -70,7 +72,7 @@ final class DeleteAction
     }
 
     // Validation
-    public function validation($val, $input)
+    public function validation(Validator $val, $input)
     {
         $val->addField('id', 'ID')
                            ->required()

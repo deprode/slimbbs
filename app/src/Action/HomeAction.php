@@ -1,6 +1,8 @@
 <?php
 namespace App\Action;
 
+use Slim\Http\Request;
+use Slim\Http\Response;
 use Slim\Views\Twig;
 use Psr\Log\LoggerInterface;
 use RKA\Session;
@@ -39,7 +41,7 @@ final class HomeAction
     }
 
     // ホーム画面（トップページ）の表示
-    public function dispatch($request, $response)
+    public function dispatch(Request $request, Response $response)
     {
         $this->logger->info("Home page action dispatched");
 
