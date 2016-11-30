@@ -58,7 +58,7 @@ class Log
     public function saveData($formatted_input)
     {
         if (!is_readable($this->log_path)) {
-            throw new Exception("log file is not found or not readable.");
+            throw new \Exception("log file is not found or not readable.");
         }
 
         $data = $this->dataRead($this->log_path);
@@ -102,7 +102,7 @@ class Log
     public function createDailyLog()
     {
         if (!is_dir($this->past_dir)) {
-            throw new Exception("past directory is not found or not readable.");
+            throw new \Exception("past directory is not found or not readable.");
         }
 
         $filepath = $this->getDailyLogPath();
@@ -117,7 +117,7 @@ class Log
     public function writeDailyLog($formatted_input)
     {
         if (!is_dir($this->past_dir)) {
-            throw new Exception("past directory is not found or not readable.");
+            throw new \Exception("past directory is not found or not readable.");
         }
 
         $filepath = $this->getDailyLogPath();
@@ -143,7 +143,7 @@ class Log
     private function deleteData($id, $del_pass = null)
     {
         if (!is_readable($this->log_path)) {
-            throw new Exception("log file is not found or not readable.");
+            throw new \Exception("log file is not found or not readable.");
         }
 
         $data = $this->dataRead();

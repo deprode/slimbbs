@@ -15,7 +15,7 @@ class Config
             $data = file_get_contents($this->path);
             $this->config = json_decode($data, true);
         } else {
-            throw new Exception("Unreadable config file");
+            throw new \Exception("Unreadable config file");
         }
     }
 

@@ -2,7 +2,9 @@
 
 namespace App\Rule;
 
-class NotMatchCollectionRule extends \Fuel\Validation\AbstractRule
+use \Fuel\Validation\AbstractRule;
+
+class NotMatchCollectionRule extends AbstractRule
 {
     protected $message = 'いずれかに一致してはいけません';
 

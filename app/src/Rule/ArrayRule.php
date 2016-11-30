@@ -2,7 +2,9 @@
 
 namespace App\Rule;
 
-class ArrayRule extends \Fuel\Validation\AbstractRule
+use \Fuel\Validation\AbstractRule;
+
+class ArrayRule extends AbstractRule
 {
     protected $message = 'エラーです';
 

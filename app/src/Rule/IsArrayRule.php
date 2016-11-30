@@ -2,7 +2,9 @@
 
 namespace App\Rule;
 
-class IsArrayRule extends \Fuel\Validation\AbstractRule
+use \Fuel\Validation\AbstractRule;
+
+class IsArrayRule extends AbstractRule
 {
     protected $message = '不正な配列です';
 
