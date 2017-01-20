@@ -1,40 +1,37 @@
-<html>
-<head>
-    <meta charset="utf-8">
-    <title>掲示板</title>
-    {% include "header.twig" %}
-    {% include "link-css.twig" %}
-    <link href='/css/style.css' rel='stylesheet' type='text/css'>
+{% extends 'base.twig' %}
+{% block title %}設定 | 掲示板{% endblock %}
+{% block stylesheets %}
     <!--[if lt IE 10]>
-        <style type="text/css">.hidden{display: inline;}</style>
+    <style type="text/css">.hidden {
+        display: inline;
+    }</style>
     <![endif]-->
-</head>
-<body>
-    <div class="container">
-        <div class="row">
-            <div class="three columns">
-                <div>
-                    <form action="{{ path_for('logout') }}" method="post" accept-charset="utf-8">
-                        <input type="hidden" name="csrf_name" value="{{ csrf_name }}">
-                        <input type="hidden" name="csrf_value" value="{{ csrf_value }}">
-                        <input type="submit" value="ログアウトする">
-                    </form>
-                </div>
-                <div>
-                    <ul>
-                        <li><a href="{{ path_for('admin') }}">ログの管理</a></li>
-                        <li>設定の変更</li>
-                    </ul>
-                </div>
+{% endblock %}
+{% block body %}
+    <div class="row">
+        <div class="three columns">
+            <div>
+                <form action="{{ path_for('logout') }}" method="post" accept-charset="utf-8">
+                    <input type="hidden" name="csrf_name" value="{{ csrf_name }}">
+                    <input type="hidden" name="csrf_value" value="{{ csrf_value }}">
+                    <input type="submit" value="ログアウトする">
+                </form>
             </div>
-            <div class="nine columns">
-                <h2>設定の変更</h2>
+            <div>
+                <ul>
+                    <li><a href="{{ path_for('admin') }}">ログの管理</a></li>
+                    <li>設定の変更</li>
+                </ul>
+            </div>
+        </div>
+        <div class="nine columns">
+            <h2>設定の変更</h2>
             <hr>
             {% if error %}
-            <div>
-                {{ error | nl2br }}
-            </div>
-            <hr>
+                <div>
+                    {{ error | nl2br }}
+                </div>
+                <hr>
             {% endif %}
             <form action="{{ path_for('admin_config_save') }}" method="post" accept-charset="utf-8">
                 <input type="hidden" name="csrf_name" value="{{ csrf_name }}">
@@ -43,7 +40,7 @@
                     <div class="six columns" id="js-ngwords">
                         <label for="ngword">禁止ワード</label>
                         {% for c in config.ngword %}
-                        <input class="u-full-width" name="ngword[]" type="text" value="{{ c }}" maxlength="50">
+                            <input class="u-full-width" name="ngword[]" type="text" value="{{ c }}" maxlength="50">
                         {% endfor %}
                     </div>
                 </div>
@@ -56,7 +53,8 @@
                 <div class="row">
                     <div class="five columns">
                         <label for="consecutive">次の投稿までの時間（秒）</label>
-                        <input class="u-full-width" name="consecutive" type="text" value="{{ config.consecutive }}" maxlength="50">
+                        <input class="u-full-width" name="consecutive" type="text" value="{{ config.consecutive }}"
+                               maxlength="50">
                     </div>
                 </div>
                 <div class="row">
@@ -67,17 +65,18 @@
             </form>
         </div>
     </div>
+{% endblock %}
+{% block javascript %}
     <script type="text/javascript" charset="utf-8">
-    var ngwords = document.getElementById("js-ngwords");
-    var add = document.getElementById("js-add").addEventListener("click", function() {
-        var new_input = document.createElement("input");
-        new_input.setAttribute("type", "text");
-        new_input.setAttribute("class", "u-full-width");
-        new_input.setAttribute("name", "ngword[]");
-        new_input.setAttribute("maxlength", "50");
-        ngwords.appendChild(new_input);
-        new_input.focus();
-    });
+        var ngwords = document.getElementById("js-ngwords");
+        var add = document.getElementById("js-add").addEventListener("click", function () {
+            var new_input = document.createElement("input");
+            new_input.setAttribute("type", "text");
+            new_input.setAttribute("class", "u-full-width");
+            new_input.setAttribute("name", "ngword[]");
+            new_input.setAttribute("maxlength", "50");
+            ngwords.appendChild(new_input);
+            new_input.focus();
+        });
     </script>
-</body>
-</html>
+{% endblock %}

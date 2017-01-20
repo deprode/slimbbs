@@ -1,92 +1,83 @@
-<html>
-<head>
-    <meta charset="utf-8">
-    <title>管理 | 掲示板</title>
-    {% include "header.twig" %}
-    {% include "link-css.twig" %}
-    <link href='/css/style.css' rel='stylesheet' type='text/css'>
-</head>
-<body>
-    <div class="container">
-        <div class="row">
-            <div class="three columns">
-                <div>
-                    <form action="{{ path_for('logout') }}" method="post" accept-charset="utf-8">
-                        <input type="hidden" name="csrf_name" value="{{ csrf_name }}">
-                        <input type="hidden" name="csrf_value" value="{{ csrf_value }}">
-                        <input type="submit" value="ログアウトする">
-                    </form>
-                </div>
-                <div>
-                    <ul>
-                        <li>ログの管理</li>
-                        <li><a href="{{ path_for('admin_config') }}">設定の変更</a></li>
-                    </ul>
-                </div>
+{% extends 'base.twig' %}
+{% block title %}管理 | 掲示板{% endblock %}
+{% block body %}
+    <div class="row">
+        <div class="three columns">
+            <div>
+                <form action="{{ path_for('logout') }}" method="post" accept-charset="utf-8">
+                    <input type="hidden" name="csrf_name" value="{{ csrf_name }}">
+                    <input type="hidden" name="csrf_value" value="{{ csrf_value }}">
+                    <input type="submit" value="ログアウトする">
+                </form>
             </div>
-            <div class="nine columns">
-                <h2>ログの管理</h2>
-                <hr>
-                {% if error %}
+            <div>
+                <ul>
+                    <li>ログの管理</li>
+                    <li><a href="{{ path_for('admin_config') }}">設定の変更</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="nine columns">
+            <h2>ログの管理</h2>
+            <hr>
+            {% if error %}
                 <div>
                     {{ error | nl2br }}
                 </div>
                 <hr>
-                {% endif %}
-                {% if message %}
+            {% endif %}
+            {% if message %}
                 <div>
                     {{ message | nl2br }}
                 </div>
                 <hr>
-                {% endif %}
-                    <div>
-                    <form action="{{ path_for('admin_del') }}" method="post" accept-charset="utf-8">
-                        <input type="hidden" name="csrf_name" value="{{ csrf_name }}">
-                        <input type="hidden" name="csrf_value" value="{{ csrf_value }}">
-                        <div class="row">
-                            <div class="six columns">
-                                <input type="submit" value="選択された投稿を削除する">
+            {% endif %}
+            <div>
+                <form action="{{ path_for('admin_del') }}" method="post" accept-charset="utf-8">
+                    <input type="hidden" name="csrf_name" value="{{ csrf_name }}">
+                    <input type="hidden" name="csrf_value" value="{{ csrf_value }}">
+                    <div class="row">
+                        <div class="six columns">
+                            <input type="submit" value="選択された投稿を削除する">
+                        </div>
+                    </div>
+                    <hr>
+                    {% if data %}
+                        {% for d in data %}
+                            <div>
+                                <label><input type="checkbox" name="del[]" value="{{ d.id }}"> 削除</label>
+                                {% if d.name and d.email %}
+                                    名前:<a href="mailto:{{ d.email }}">{{ d.name }}</a>
+                                {% elseif d.name == false and d.email %}
+                                    名前:<a href="mailto:{{ d.email }}">＿</a>
+                                {% elseif d.name == false %}
+                                    名前:＿
+                                {% else %}
+                                    名前:{{ d.name }}
+                                {% endif %}
+                                <!-- <br> -->
+                                ID.{{ d.id }}<br>
+
+                                {% if d.subject %}
+                                    <b>{{ d.subject }}</b><br>
+                                {% else %}
+                                    <b>無題</b><br>
+                                {% endif %}
+
+                                {{ d.body | nl2br }}<br>
+
+                                {% if d.url %}
+                                    URL: <a href="{{ d.url }}">{{ d.url }}</a><br>
+                                {% endif %}
+                                {{ d.created }}
                             </div>
-                        </div>
-                        <hr>
-                {% if data %}
-                {% for d in data %}
-                        <div>
-                            <label><input type="checkbox" name="del[]" value="{{ d.id }}"> 削除</label>
-                            {% if d.name and d.email %}
-                                名前:<a href="mailto:{{ d.email }}">{{ d.name }}</a>
-                            {% elseif d.name == false and d.email %}
-                                名前:<a href="mailto:{{ d.email }}">＿</a>
-                            {% elseif d.name == false %}
-                                名前:＿
-                            {% else %}
-                                名前:{{ d.name }}
-                            {% endif %}
-                            <!-- <br> -->
-                            ID.{{ d.id }}<br>
-
-                            {% if d.subject %}
-                                <b>{{ d.subject }}</b><br>
-                            {% else %}
-                                <b>無題</b><br>
-                            {% endif %}
-
-                            {{ d.body | nl2br }}<br>
-
-                            {% if d.url %}
-                                URL: <a href="{{ d.url }}">{{ d.url }}</a><br>
-                            {% endif %}
-                            {{ d.created }}
-                        </div>
-                        <hr>
-                {% endfor %}
-                {% else %}
-                    現在、投稿はありません。
-                {% endif %}
-                    </form>
-                </div>
+                            <hr>
+                        {% endfor %}
+                    {% else %}
+                        現在、投稿はありません。
+                    {% endif %}
+                </form>
             </div>
         </div>
     </div>
-</body>
-</html>
+{% endblock %}

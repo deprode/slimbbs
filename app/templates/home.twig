@@ -1,102 +1,99 @@
-<html>
-    <head>
-        <meta charset="utf-8">
-        <title>掲示板</title>
-        {% include "header.twig" %}
-        {% include "link-css.twig" %}
-        <link href='/css/style.css' rel='stylesheet' type='text/css'>
-        <!--[if lt IE 10]>
-            <style type="text/css">.hidden{display: inline;}</style>
-        <![endif]-->
-    </head>
-    <body>
-        <div class="container">
-            <h1>掲示板</h1>
-            <hr>
-            {% if error %}
-            <div>
-                {{ error | nl2br }}
+{% extends 'base.twig' %}
+{% block title %}掲示板{% endblock %}
+{% block stylesheets %}
+    <!--[if lt IE 10]>
+    <style type="text/css">.hidden {
+        display: inline;
+    }</style>
+    <![endif]-->
+{% endblock %}
+{% block body %}
+    <h1>掲示板</h1>
+    <hr>
+    {% if error %}
+        <div>
+            {{ error | nl2br }}
+        </div>
+        <hr>
+    {% endif %}
+    {% if message %}
+        <div>
+            {{ message | nl2br }}
+        </div>
+        <hr>
+    {% endif %}
+    <form action="{{ path_for('save') }}" method="post" accept-charset="utf-8">
+        <input type="hidden" name="csrf_name" value="{{ csrf_name }}">
+        <input type="hidden" name="csrf_value" value="{{ csrf_value }}">
+        <div class="row">
+            <div class="six columns">
+                <label for="name">名前</label>
+                <input class="u-full-width" name="name" type="text" value="{{ name }}" maxlength="50">
+                <label for="subject">タイトル</label>
+                <input class="u-full-width" name="subject" type="text" maxlength="50">
+                <label for="body">本文</label>
+                <textarea name="body" class="u-full-width"></textarea>
             </div>
-            <hr>
+            <div class="six columns">
+                <label for="email">メールアドレス</label>
+                <input class="u-full-width" name="email" type="email" value="{{ email }}">
+                <label for="url">URL</label>
+                <input class="u-full-width" name="url" type="url">
+                <label for="del_pass">削除パス</label>
+                <input name="del_pass" type="password">
+            </div>
+        </div>
+        <div class="row">
+            <div class="six columns">
+                <input type="submit" value="送信">
+            </div>
+        </div>
+    </form>
+    <hr>
+    <div>
+        {% set offset = current_page * per_page %}
+        {% spaceless %}
+            {% if count == 0 %}
+                まだ書き込みはありません。
+            {% else %}
+                {{ count }}件の書き込み中
+                {{ offset+1 }}
+                {% if count > (offset + per_page) %}
+                    〜{{ offset + per_page }}
+                {% endif %}
+                番目を表示
             {% endif %}
-            {% if message %}
-            <div>
-                {{ message | nl2br }}
-            </div>
-            <hr>
+        {% endspaceless %}
+    </div>
+    <hr>
+    {% for d in data %}
+        <div>
+            {% if d.name and d.email %}
+                名前:<a href="mailto:{{ d.email }}">{{ d.name }}</a>
+            {% elseif d.name == false and d.email %}
+                名前:<a href="mailto:{{ d.email }}">＿</a>
+            {% elseif d.name == false %}
+                名前:＿
+            {% else %}
+                名前:{{ d.name }}
             {% endif %}
-            <form action="{{ path_for('save') }}" method="post" accept-charset="utf-8">
-                <input type="hidden" name="csrf_name" value="{{ csrf_name }}">
-                <input type="hidden" name="csrf_value" value="{{ csrf_value }}">
-                <div class="row">
-                    <div class="six columns">
-                        <label for="name">名前</label>
-                        <input class="u-full-width" name="name" type="text" value="{{ name }}" maxlength="50">
-                        <label for="subject">タイトル</label>
-                        <input class="u-full-width" name="subject" type="text" maxlength="50">
-                        <label for="body">本文</label>
-                        <textarea name="body" class="u-full-width"></textarea>
-                    </div>
-                    <div class="six columns">
-                        <label for="email">メールアドレス</label>
-                        <input class="u-full-width" name="email" type="email" value="{{ email }}">
-                        <label for="url">URL</label>
-                        <input class="u-full-width" name="url" type="url">
-                        <label for="del_pass">削除パス</label>
-                        <input name="del_pass" type="password">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="six columns">
-                        <input type="submit" value="送信">
-                    </div>
-                </div>
-            </form>
-            <hr>
-            <div>
-            {% set offset = current_page * per_page %}
-{% spaceless %}
-                {% if count == 0 %}
-                    まだ書き込みはありません。
-                {% else %}
-                    {{ count }}件の書き込み中
-                    {{ offset+1 }}
-                    {% if count > (offset + per_page) %}
-                        〜{{ offset + per_page }}
-                    {% endif %}
-                    番目を表示
-                {% endif %}
-{% endspaceless %}
-            </div>
-            <hr>
-          {% for d in data %}
-            <div>
-                {% if d.name and d.email %}
-                    名前:<a href="mailto:{{ d.email }}">{{ d.name }}</a>
-                {% elseif d.name == false and d.email %}
-                    名前:<a href="mailto:{{ d.email }}">＿</a>
-                {% elseif d.name == false %}
-                    名前:＿
-                {% else %}
-                    名前:{{ d.name }}
-                {% endif %}
-                <!-- <br> -->
-                ID.{{ d.id }}<br>
+            <!-- <br> -->
+            ID.{{ d.id }}<br>
 
-                {% if d.subject %}
-                    <b>{{ d.subject }}</b><br>
-                {% else %}
-                    <b>無題</b><br>
-                {% endif %}
+            {% if d.subject %}
+                <b>{{ d.subject }}</b><br>
+            {% else %}
+                <b>無題</b><br>
+            {% endif %}
 
-                {{ d.body | nl2br }}<br>
+            {{ d.body | nl2br }}<br>
 
-                {% if d.url %}
-                    URL: <a href="{{ d.url }}">{{ d.url }}</a><br>
-                {% endif %}
-                {{ d.created }}
+            {% if d.url %}
+                URL: <a href="{{ d.url }}">{{ d.url }}</a><br>
+            {% endif %}
+            {{ d.created }}
 
-                {% if d.del_pass %}
+            {% if d.del_pass %}
                 <a href="javascript:void(0)" onclick="toggle(this)">削除</a>
                 <div class="hidden">
                     <form action="{{ path_for('delete') }}" method="post" accept-charset="utf-8">
@@ -107,40 +104,39 @@
                         <input type="submit" value="削除" class="thin">
                     </form>
                 </div>
-                {% endif %}
-            </div>
-            <hr>
-          {% endfor %}
-
-            <button onclick="javascript: window.location.reload(true)">リロード</button>
-            <ul class="pagination">
-                {% if current_page > 0 %}
-                <li>
-                    <a href="{{ path_for('home') }}?page=0" title="">最初へ</a>
-                </li>
-                {% endif %}
-                {% if current_page > 1 %}
-                <li>
-                    <a href="{{ path_for('home') }}?page={{ current_page-1 }}" title="">前へ</a>
-                </li>
-                {% endif %}
-                {% if current_page < (count // per_page) %}
-                <li>
-                    <a href="{{ path_for('home') }}?page={{ current_page+1 }}" title="">次へ</a>
-                </li>
-                {% endif %}
-                {% if current_page+1 < (count // per_page) %}
-                <li>
-                    <a href="{{ path_for('home') }}?page={{ (count / per_page) | round(0,'floor') }}" title="">最後へ</a>
-                </li>
-                {% endif %}
-            </div>
+            {% endif %}
         </div>
+        <hr>
+    {% endfor %}
+
+    <button onclick="javascript: window.location.reload(true)">リロード</button>
+    <ul class="pagination">
+        {% if current_page > 0 %}
+            <li>
+                <a href="{{ path_for('home') }}?page=0" title="">最初へ</a>
+            </li>
+        {% endif %}
+        {% if current_page > 1 %}
+            <li>
+                <a href="{{ path_for('home') }}?page={{ current_page-1 }}" title="">前へ</a>
+            </li>
+        {% endif %}
+        {% if current_page < (count // per_page) %}
+            <li>
+                <a href="{{ path_for('home') }}?page={{ current_page+1 }}" title="">次へ</a>
+            </li>
+        {% endif %}
+        {% if current_page+1 < (count // per_page) %}
+            <li>
+                <a href="{{ path_for('home') }}?page={{ (count / per_page) | round(0,'floor') }}" title="">最後へ</a>
+            </li>
+        {% endif %}
+    </ul>
+{% endblock %}
+{% block javascript %}
     <script type="text/javascript" charset="utf-8">
         function toggle(element, classname) {
             element.nextElementSibling.classList.toggle('hidden');
         }
     </script>
-    </body>
-</html>
-
+{% endblock %}
