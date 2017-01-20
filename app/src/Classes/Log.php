@@ -153,7 +153,7 @@ class Log
         if ($index < 0) {
             // 投稿が見つからない
             return false;
-        } elseif (!is_null($del_pass) && !password_verify((string)$del_pass, $data[$index]->del_pass)) {
+        } elseif (!$this->checkPassword($del_pass, $data[$index]->del_pass)) {
             // 削除パスが違う
             return false;
         }
@@ -184,5 +184,10 @@ class Log
     public function deleteDataForAdmin($id)
     {
         return $this->deleteData($id);
+    }
+
+    private function checkPassword($input_pass, $del_pass)
+    {
+        return is_null($input_pass) || password_verify((string)$input_pass, $del_pass);
     }
 }

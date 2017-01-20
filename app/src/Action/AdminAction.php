@@ -49,7 +49,7 @@ final class AdminAction
             $password = $inputs['password'];
 
             // IDとパスワードのチェック
-            if ((string)$admin_id !== $this->admin_id && !password_verify($password, $this->admin_pass)) {
+            if (!$this->checkPassword($admin_id, $password)) {
                 $this->flash->addMessage('errorMessage', 'IDかパスワードが間違っています。');
                 return $response->withRedirect('/auth/');
             }
@@ -88,5 +88,10 @@ final class AdminAction
             ]
         );
         return $response;
+    }
+
+    protected function checkPassword($admin_id, $password)
+    {
+        return (string)$admin_id === $this->admin_id && password_verify($password, $this->admin_pass);
     }
 }
