@@ -19,7 +19,7 @@ final class HomeAction
     private $log;
 
     // 1ページに表示する投稿数
-    const DEFAULT_PER_PAFE = 10;
+    const DEFAULT_PER_PAGE = 10;
 
     public function __construct(Twig $view, LoggerInterface $logger, Session $session, Messages $flash, Log $log)
     {
@@ -31,7 +31,7 @@ final class HomeAction
     }
 
     // データを表示するサイズに切り取る
-    public function dataSplice($data, $page, $per_page = self::DEFAULT_PER_PAFE)
+    public function dataSplice($data, $page, $per_page = self::DEFAULT_PER_PAGE)
     {
         if ($data) {
             $data = array_splice($data, $page * $per_page, $per_page);
@@ -53,7 +53,7 @@ final class HomeAction
 
         // 表示するログの用意
         $page = $request->getParam('page');
-        $per_page = self::DEFAULT_PER_PAFE;
+        $per_page = self::DEFAULT_PER_PAGE;
         $all_data = $this->log->dataRead();
         $data_count = count($all_data);
         $data = $this->dataSplice($all_data, $page, $per_page);
