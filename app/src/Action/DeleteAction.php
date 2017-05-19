@@ -5,8 +5,9 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Views\Twig;
 use Psr\Log\LoggerInterface;
-use Fuel\Validation\Validator;
+use Respect\Validation\Validator;
 use Slim\Flash\Messages;
+use RKA\Session;
 use App\Classes\Log;
 use App\Traits\Validation;
 
@@ -16,21 +17,17 @@ final class DeleteAction
     private $logger;
     private $validate;
     private $flash;
+    private $session;
     private $log;
 
-    use Validation {
-        Validation::__construct as private __vConstruct;
-    }
-
-    public function __construct(Twig $view, LoggerInterface $logger, Validator $validate, Messages $flash, Log $log)
+    public function __construct(Twig $view, LoggerInterface $logger, Validator $validate, Session $session, Messages $flash, Log $log)
     {
         $this->view     = $view;
         $this->logger   = $logger;
         $this->validate = $validate;
+        $this->session  = $session;
         $this->flash    = $flash;
         $this->log      = $log;
-
-        $this->__vConstruct();
     }
 
     public function dispatch(Request $request, Response $response)
@@ -46,9 +43,10 @@ final class DeleteAction
         $input = $request->getParsedBody();
 
         // Validation
-        if (!$this->validation($this->validate, $input)) {
-            $mes = $this->getValidationMessage();
-            $this->flash->addMessage('errorMessage', $mes);
+        if($request->getAttribute('has_errors')){
+            $errors = $request->getAttribute('errors');
+            $this->session->set('errors', $errors);
+            $this->flash->addMessage('errorMessage', '入力に不適切な箇所があったため、書き込みを中断しました');
             return $response->withRedirect('/');
         }
 
@@ -69,27 +67,6 @@ final class DeleteAction
         }
 
         return $response->withRedirect('/');
-    }
-
-    // Validation
-    public function validation(Validator $val, $input)
-    {
-        $val->addField('id', 'ID')
-                           ->required()
-                               ->setMessage('{label}は必須です。')
-                           ->Regex('/[0-9a-zA-Z]/')
-                               ->setMessage('{label}が英数字ではありません。')
-                       ->addField('del_pass', '削除パス')
-                           ->required()
-                               ->setMessage('{label}は必須です。')
-                           ->Regex('/\w/')
-                               ->setMessage('{label}が一致しません。');
-
-        $result = $val->run($input);
-
-        $this->cached_errors = $result->getErrors();
-
-        return $result->isValid();
     }
 
     public function getCSRFValidMessage()

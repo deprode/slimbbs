@@ -4,8 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "a5797d6292f7baaadade2370ce772717",
-    "content-hash": "eba675fb695b720ebe9db9cb366882a8",
+    "content-hash": "0282eea694b450c0f83730a694cfaa5a",
     "packages": [
         {
             "name": "akrabat/rka-ip-address-middleware",
@@ -53,7 +52,7 @@
                 "middleware",
                 "psr7"
             ],
-            "time": "2015-11-06 10:38:17"
+            "time": "2015-11-06T10:38:17+00:00"
         },
         {
             "name": "akrabat/rka-slim-session-middleware",
@@ -99,7 +98,7 @@
                 "session",
                 "slim"
             ],
-            "time": "2016-04-18 07:52:43"
+            "time": "2016-04-18T07:52:43+00:00"
         },
         {
             "name": "container-interop/container-interop",
@@ -126,51 +125,57 @@
                 "MIT"
             ],
             "description": "Promoting the interoperability of container objects (DIC, SL, etc.)",
-            "time": "2014-12-30 15:22:37"
+            "time": "2014-12-30T15:22:37+00:00"
         },
         {
-            "name": "fuelphp/validation",
-            "version": "2.0.0",
+            "name": "davidepastore/slim-validation",
+            "version": "v0.5.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/fuelphp/validation.git",
-                "reference": "e616d73b409b3e88871bed67e95ff94d096abf8e"
+                "url": "https://github.com/DavidePastore/Slim-Validation.git",
+                "reference": "161905b9d942a848e170a15d58dfc17826a08cc6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fuelphp/validation/zipball/e616d73b409b3e88871bed67e95ff94d096abf8e",
-                "reference": "e616d73b409b3e88871bed67e95ff94d096abf8e",
+                "url": "https://api.github.com/repos/DavidePastore/Slim-Validation/zipball/161905b9d942a848e170a15d58dfc17826a08cc6",
+                "reference": "161905b9d942a848e170a15d58dfc17826a08cc6",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.3"
+                "php": ">=5.5.0",
+                "psr/http-message": "^1.0",
+                "respect/validation": "^1.0"
             },
             "require-dev": {
-                "codeception/codeception": "~2.0",
-                "codeception/mockery-module": "dev-master"
+                "phpunit/phpunit": "^4.0",
+                "scrutinizer/ocular": "~1.1",
+                "slim/slim": "~3.0"
             },
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "Fuel\\Validation\\": "src/"
+                    "DavidePastore\\Slim\\Validation\\": "src"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "MIT"
+                "GPL-2.0+"
             ],
             "authors": [
                 {
-                    "name": "FuelPHP Development Team",
-                    "email": "team@fuelphp.com"
+                    "name": "Davide Pastore",
+                    "email": "pasdavide@gmail.com"
                 }
             ],
-            "description": ".",
-            "homepage": "https://github.com/fuelphp/validation",
+            "description": "A slim middleware for validation based on Respect/Validation",
             "keywords": [
-                "validation"
+                "framework",
+                "middleware",
+                "slim",
+                "validation",
+                "validator"
             ],
-            "time": "2015-01-01 15:50:03"
+            "time": "2017-03-21T13:31:00+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -248,7 +253,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2016-11-26 00:15:39"
+            "time": "2016-11-26T00:15:39+00:00"
         },
         {
             "name": "nikic/fast-route",
@@ -291,7 +296,7 @@
                 "router",
                 "routing"
             ],
-            "time": "2016-10-20 17:36:47"
+            "time": "2016-10-20T17:36:47+00:00"
         },
         {
             "name": "pimple/pimple",
@@ -337,7 +342,7 @@
                 "container",
                 "dependency injection"
             ],
-            "time": "2015-09-11 15:10:35"
+            "time": "2015-09-11T15:10:35+00:00"
         },
         {
             "name": "psr/http-message",
@@ -387,7 +392,7 @@
                 "request",
                 "response"
             ],
-            "time": "2016-08-06 14:39:51"
+            "time": "2016-08-06T14:39:51+00:00"
         },
         {
             "name": "psr/log",
@@ -434,7 +439,72 @@
                 "psr",
                 "psr-3"
             ],
-            "time": "2016-10-10 12:19:37"
+            "time": "2016-10-10T12:19:37+00:00"
+        },
+        {
+            "name": "respect/validation",
+            "version": "1.1.12",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Respect/Validation.git",
+                "reference": "5ab87d1dd932872f6670136a513f72ff9ea41c67"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Respect/Validation/zipball/5ab87d1dd932872f6670136a513f72ff9ea41c67",
+                "reference": "5ab87d1dd932872f6670136a513f72ff9ea41c67",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4",
+                "symfony/polyfill-mbstring": "^1.2"
+            },
+            "require-dev": {
+                "egulias/email-validator": "~1.2",
+                "malkusch/bav": "~1.0",
+                "mikey179/vfsstream": "^1.5",
+                "phpunit/phpunit": "~4.0",
+                "symfony/validator": "~2.6.9",
+                "zendframework/zend-validator": "~2.3"
+            },
+            "suggest": {
+                "egulias/email-validator": "Strict (RFC compliant) email validation",
+                "ext-bcmath": "Arbitrary Precision Mathematics",
+                "ext-mbstring": "Multibyte String Functions",
+                "fabpot/php-cs-fixer": "Fix PSR2 and other coding style issues",
+                "malkusch/bav": "German bank account validation",
+                "symfony/validator": "Use Symfony validator through Respect\\Validation",
+                "zendframework/zend-validator": "Use Zend Framework validator through Respect\\Validation"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.1-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Respect\\Validation\\": "library/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD Style"
+            ],
+            "authors": [
+                {
+                    "name": "Respect/Validation Contributors",
+                    "homepage": "https://github.com/Respect/Validation/graphs/contributors"
+                }
+            ],
+            "description": "The most awesome validation engine ever created for PHP",
+            "homepage": "http://respect.github.io/Validation/",
+            "keywords": [
+                "respect",
+                "validation",
+                "validator"
+            ],
+            "time": "2017-03-14T09:44:11+00:00"
         },
         {
             "name": "slim/csrf",
@@ -483,7 +553,7 @@
                 "middleware",
                 "slim"
             ],
-            "time": "2015-09-04 20:03:49"
+            "time": "2015-09-04T20:03:49+00:00"
         },
         {
             "name": "slim/flash",
@@ -528,7 +598,7 @@
                 "provider",
                 "slim"
             ],
-            "time": "2015-08-16 22:49:06"
+            "time": "2015-08-16T22:49:06+00:00"
         },
         {
             "name": "slim/slim",
@@ -598,7 +668,7 @@
                 "micro",
                 "router"
             ],
-            "time": "2016-12-20 20:30:47"
+            "time": "2016-12-20T20:30:47+00:00"
         },
         {
             "name": "slim/twig-view",
@@ -649,7 +719,66 @@
                 "twig",
                 "view"
             ],
-            "time": "2015-07-11 13:57:28"
+            "time": "2015-07-11T13:57:28+00:00"
+        },
+        {
+            "name": "symfony/polyfill-mbstring",
+            "version": "v1.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/polyfill-mbstring.git",
+                "reference": "e79d363049d1c2128f133a2667e4f4190904f7f4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/e79d363049d1c2128f133a2667e4f4190904f7f4",
+                "reference": "e79d363049d1c2128f133a2667e4f4190904f7f4",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "suggest": {
+                "ext-mbstring": "For best performance"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.3-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Polyfill\\Mbstring\\": ""
+                },
+                "files": [
+                    "bootstrap.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicolas Grekas",
+                    "email": "p@tchwork.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony polyfill for the Mbstring extension",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "compatibility",
+                "mbstring",
+                "polyfill",
+                "portable",
+                "shim"
+            ],
+            "time": "2016-11-14T01:06:16+00:00"
         },
         {
             "name": "twig/twig",
@@ -710,7 +839,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2017-01-11 19:36:15"
+            "time": "2017-01-11T19:36:15+00:00"
         }
     ],
     "packages-dev": [],

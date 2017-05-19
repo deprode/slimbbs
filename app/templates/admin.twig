@@ -22,7 +22,12 @@
             <hr>
             {% if error %}
                 <div>
-                    {{ error | nl2br }}
+                    {{ error }}
+                    {% for form_errors in errors %}
+                        {% for e in form_errors %}
+                            <li>{{ e }}</li>
+                        {% endfor %}
+                    {% endfor %}
                 </div>
                 <hr>
             {% endif %}

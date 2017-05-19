@@ -5,7 +5,7 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Views\Twig;
 use Psr\Log\LoggerInterface;
-use Fuel\Validation\Validator;
+use Respect\Validation\Validator;
 use RKA\Session;
 use Slim\Flash\Messages;
 use App\Classes\Log;
@@ -23,10 +23,6 @@ final class SaveAction
 
     private $log;
 
-    use Validation {
-        Validation::__construct as private __vConstruct;
-    }
-
     public function __construct(
         Twig $view,
         LoggerInterface $logger,
@@ -43,7 +39,6 @@ final class SaveAction
         $this->flash    = $flash;
         $this->log      = $log;
         $this->config   = $config;
-        $this->__vConstruct();
     }
 
     public function dispatch(Request $request, Response $response)
@@ -71,9 +66,10 @@ EOT;
         $this->session->set('email', $input['email']);
 
         // Validation
-        if (!$this->validation($this->validate, $input)) {
-            $mes = $this->getValidationMessage();
-            $this->flash->addMessage('errorMessage', $mes);
+        if($request->getAttribute('has_errors')){
+            $errors = $request->getAttribute('errors');
+            $this->session->set('errors', $errors);
+            $this->flash->addMessage('errorMessage', '入力に不適切な箇所があったため、書き込みを中断しました');
             return $response->withRedirect('/');
         }
 
@@ -99,44 +95,6 @@ EOT;
         $this->flash->addMessage('resultMessage', '書き込みに成功しました');
 
         return $response->withRedirect('/');
-    }
-
-    // Validation
-    public function validation(Validator $val, $input)
-    {
-        // 投稿禁止ワードを読み込む
-        $ngwords = $this->config->getConfig('ngword');
-
-        $val->addCustomRule('notMatchCollectionRule', '\App\Rule\NotMatchCollectionRule');
-
-        $val->addField('name', '名前')
-               ->maxLength(50)
-               ->setMessage('{label} は50文字までです。')
-            ->addField('subject', 'タイトル')
-               ->maxLength(50)
-               ->setMessage('{label} は50文字までです。')
-            ->addField('body', '本文')
-               ->required()
-               ->setMessage('{label} は必須です。')
-               ->maxLength(2000)
-               ->setMessage('{label} は2000文字までです。')
-               ->notMatchCollectionRule($ngwords)
-               ->setMessage('NGワードが含まれています。')
-            ->addField('email', 'メールアドレス')
-               ->email()
-               ->setMessage('{label} 欄にはメールアドレスを書いてください。')
-            ->addField('url', 'URL')
-               ->url()
-               ->setMessage('{label} 欄にはURLを書いてください。')
-            ->addField('del_pass', '削除パス')
-               ->Regex('/\w/')
-               ->setMessage('{label} は英数字とアンダースコアを使ってください。');
-
-        $result = $val->run($input);
-
-        $this->cached_errors = $result->getErrors();
-
-        return $result->isValid();
     }
 
     // パスワード生成
