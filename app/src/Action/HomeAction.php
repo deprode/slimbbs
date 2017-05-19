@@ -64,6 +64,7 @@ final class HomeAction
         // 書き込んだときの情報を読み込み
         $name = $this->session->get('name');
         $email = $this->session->get('email');
+        $errors = $this->session->get('errors');
 
         $this->view->render(
             $response,
@@ -74,6 +75,7 @@ final class HomeAction
                 'data' => $data,
                 'message' => $message[0],
                 'error' => $error[0],
+                'errors' => $errors,
                 'count' => $data_count,
                 'current_page' => $page,
                 'per_page' => $per_page,

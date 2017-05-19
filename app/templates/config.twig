@@ -29,7 +29,12 @@
             <hr>
             {% if error %}
                 <div>
-                    {{ error | nl2br }}
+                    {{ error }}
+                    {% for form_errors in errors %}
+                        {% for e in form_errors %}
+                            <li>{{ e }}</li>
+                        {% endfor %}
+                    {% endfor %}
                 </div>
                 <hr>
             {% endif %}
@@ -66,7 +71,7 @@
         </div>
     </div>
 {% endblock %}
-{% block javascript %}
+{% block javascripts %}
     <script type="text/javascript" charset="utf-8">
         var ngwords = document.getElementById("js-ngwords");
         var add = document.getElementById("js-add").addEventListener("click", function () {

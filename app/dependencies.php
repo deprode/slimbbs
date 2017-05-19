@@ -26,7 +26,7 @@ $container['flash'] = function ($c) {
 
 // Validation
 $container['validate'] = function ($c) {
-    return new \Fuel\Validation\Validator([]);
+    return new Respect\Validation\Validator();
 };
 
 // Seesion
@@ -93,6 +93,7 @@ $container['App\Action\DeleteAction'] = function ($c) {
         $c->get('view'),
         $c->get('logger'),
         $c->get('validate'),
+        $c->get('session'),
         $c->get('flash'),
         $c->get('log')
     );
@@ -127,6 +128,7 @@ $container['App\Action\AdminDeleteAction'] = function ($c) {
         $c->get('view'),
         $c->get('logger'),
         $c->get('validate'),
+        $c->get('session'),
         $c->get('flash'),
         $c->get('log')
     );
@@ -138,6 +140,7 @@ $container['App\Action\AdminConfigAction'] = function ($c) {
         $c->get('view'),
         $c->get('logger'),
         $c->get('validate'),
+        $c->get('session'),
         $c->get('flash'),
         $c->get('config')
     );

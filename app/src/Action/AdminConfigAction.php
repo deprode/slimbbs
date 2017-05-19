@@ -5,7 +5,8 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Views\Twig;
 use Psr\Log\LoggerInterface;
-use Fuel\Validation\Validator;
+use Respect\Validation\Validator;
+use RKA\Session;
 use Slim\Flash\Messages;
 use App\Classes\Config;
 use App\Traits\Validation;
@@ -18,19 +19,14 @@ final class AdminConfigAction
     private $validate;
     private $config;
 
-    use Validation {
-        Validation::__construct as private __vConstruct;
-    }
-
-    public function __construct(Twig $view, LoggerInterface $logger, Validator $validate, Messages $flash, Config $config)
+    public function __construct(Twig $view, LoggerInterface $logger, Validator $validate, Session $session, Messages $flash, Config $config)
     {
         $this->view    = $view;
         $this->logger  = $logger;
         $this->validate = $validate;
+        $this->session  = $session;
         $this->flash   = $flash;
         $this->config  = $config;
-
-        $this->__vConstruct();
     }
 
     public function dispatch(Request $request, Response $response)
@@ -63,9 +59,11 @@ final class AdminConfigAction
     {
         $input = $request->getParsedBody();
 
-        if (!$this->validation($this->validate, $input)) {
-            $mes = $this->getValidationMessage();
-            $this->flash->addMessage('errorMessage', $mes);
+        // Validation
+        if($request->getAttribute('has_errors')){
+            $errors = $request->getAttribute('errors');
+            $this->session->set('errors', $errors);
+            $this->flash->addMessage('errorMessage', '入力に不適切な箇所があったため、書き込みを中断しました');
             return $response->withRedirect('/admin/config/');
         }
 
@@ -92,24 +90,5 @@ final class AdminConfigAction
         ];
 
         return $data;
-    }
-
-    public function validation(Validator $val, $input)
-    {
-        $val->addCustomRule('isArray', '\App\Rule\IsArrayRule');
-        $val->addField('consecutive', '投稿間隔')
-                   ->required()
-                       ->setMessage('投稿間隔が空欄です')
-                   ->number()
-                   ->numericMin(0)
-            ->addField('ngword', '禁止ワード')
-                   ->isArray()
-                       ->setMessage('禁止ワードが不正な形式です');
-
-        $result = $val->run($input);
-
-        $this->cached_errors = $result->getErrors();
-
-        return $result->isValid();
     }
 }

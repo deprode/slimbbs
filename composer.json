@@ -13,8 +13,8 @@
         "slim/flash": "^0.1.0",
         "monolog/monolog": "^1.13",
         "slim/csrf": "^0.4.0",
-        "fuelphp/validation": "^2.0",
         "akrabat/rka-slim-session-middleware": "^2.0.0",
-        "akrabat/rka-ip-address-middleware": "^0.4.0"
+        "akrabat/rka-ip-address-middleware": "^0.4.0",
+        "davidepastore/slim-validation": "^0.5.0"
     }
 }

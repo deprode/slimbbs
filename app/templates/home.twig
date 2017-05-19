@@ -12,7 +12,12 @@
     <hr>
     {% if error %}
         <div>
-            {{ error | nl2br }}
+            {{ error }}
+            {% for form_errors in errors %}
+                {% for e in form_errors %}
+                    <li>{{ e }}</li>
+                {% endfor %}
+            {% endfor %}
         </div>
         <hr>
     {% endif %}
@@ -133,7 +138,7 @@
         {% endif %}
     </ul>
 {% endblock %}
-{% block javascript %}
+{% block javascripts %}
     <script type="text/javascript" charset="utf-8">
         function toggle(element, classname) {
             element.nextElementSibling.classList.toggle('hidden');

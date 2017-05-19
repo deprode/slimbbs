@@ -5,7 +5,8 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Views\Twig;
 use Psr\Log\LoggerInterface;
-use Fuel\Validation\Validator;
+use Respect\Validation\Validator;
+use RKA\Session;
 use Slim\Flash\Messages;
 use App\Classes\Log;
 use App\Traits\Validation;
@@ -15,22 +16,18 @@ final class AdminDeleteAction
     private $view;
     private $logger;
     private $validate;
+    private $session;
     private $flash;
     private $log;
 
-    use Validation {
-        Validation::__construct as private __vConstruct;
-    }
-
-    public function __construct(Twig $view, LoggerInterface $logger, Validator $validate, Messages $flash, Log $log)
+    public function __construct(Twig $view, LoggerInterface $logger, Validator $validate, Session $session, Messages $flash, Log $log)
     {
         $this->view     = $view;
         $this->logger   = $logger;
         $this->validate = $validate;
+        $this->session  = $session;
         $this->flash    = $flash;
         $this->log      = $log;
-
-        $this->__vConstruct();
     }
 
     public function dispatch(Request $request, Response $response)
@@ -46,9 +43,10 @@ final class AdminDeleteAction
         $input = $request->getParsedBody();
 
         // Validation
-        if (!$this->validation($this->validate, $input)) {
-            $mes = $this->getValidationMessage();
-            $this->flash->addMessage('errorMessage', $mes);
+        if($request->getAttribute('has_errors')){
+            $errors = $request->getAttribute('errors');
+            $this->session->set('errors', $errors);
+            $this->flash->addMessage('errorMessage', '入力に不適切な箇所があったため、書き込みを中断しました');
             return $response->withRedirect('/admin/');
         }
 
@@ -75,20 +73,6 @@ final class AdminDeleteAction
         } else {
             return $count . '件の削除を完了しました。';
         }
-    }
-
-    public function validation(Validator $val, $input)
-    {
-        $val->addCustomRule('arrayRule', '\App\Rule\ArrayRule');
-        $val->addField('del', 'ID')
-                   ->arrayRule()
-                       ->setMessage('IDは必須です。');
-
-        $result = $val->run($input);
-
-        $this->cached_errors = $result->getErrors();
-
-        return $result->isValid();
     }
 
     public function getCSRFValidMessage()
