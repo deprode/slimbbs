@@ -38,6 +38,7 @@
                 <hr>
             {% endif %}
             <div>
+                {% if data %}
                 <form action="{{ path_for('admin_del') }}" method="post" accept-charset="utf-8">
                     <input type="hidden" name="csrf_name" value="{{ csrf_name }}">
                     <input type="hidden" name="csrf_value" value="{{ csrf_value }}">
@@ -47,7 +48,6 @@
                         </div>
                     </div>
                     <hr>
-                    {% if data %}
                         {% for d in data %}
                             <div>
                                 <label><input type="checkbox" name="del[]" value="{{ d.id }}"> 削除</label>
@@ -78,10 +78,10 @@
                             </div>
                             <hr>
                         {% endfor %}
-                    {% else %}
-                        現在、投稿はありません。
-                    {% endif %}
                 </form>
+                {% else %}
+                    現在、投稿はありません。
+                {% endif %}
             </div>
         </div>
     </div>
