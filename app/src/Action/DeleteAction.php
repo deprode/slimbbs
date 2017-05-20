@@ -36,8 +36,9 @@ final class DeleteAction
 
         // CSRFチェック
         if ($request->getAttribute('csrf_status') === false) {
-            $failed = $this->getCSRFValidMessage();
-            return $response->write($failed);
+            $response = $response->withStatus(403);
+            $this->view->render($response, 'csrf.twig');
+            return $response;
         }
 
         $input = $request->getParsedBody();
@@ -67,21 +68,5 @@ final class DeleteAction
         }
 
         return $response->withRedirect('/');
-    }
-
-    public function getCSRFValidMessage()
-    {
-        $failed = <<<EOT
-<!DOCTYPE html>
-<html>
-<head><title>CSRF test</title></head>
-<body>
-    <h1>Error</h1>
-    <p>An error occurred with your form submission.
-       Please start again.</p>
-</body>
-</html>
-EOT;
-        return $failed;
     }
 }

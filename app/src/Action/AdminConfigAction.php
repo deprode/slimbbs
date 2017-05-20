@@ -57,6 +57,13 @@ final class AdminConfigAction
 
     public function save(Request $request, Response $response)
     {
+        // CSRFチェック
+        if ($request->getAttribute('csrf_status') === false) {
+            $response = $response->withStatus(403);
+            $this->view->render($response, 'csrf.twig');
+            return $response;
+        }
+
         $input = $request->getParsedBody();
 
         // Validation
