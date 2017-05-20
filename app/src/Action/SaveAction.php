@@ -10,7 +10,6 @@ use RKA\Session;
 use Slim\Flash\Messages;
 use App\Classes\Log;
 use App\Classes\Config;
-use App\Traits\Validation;
 
 final class SaveAction
 {

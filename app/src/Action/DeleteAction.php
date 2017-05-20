@@ -9,7 +9,6 @@ use Respect\Validation\Validator;
 use Slim\Flash\Messages;
 use RKA\Session;
 use App\Classes\Log;
-use App\Traits\Validation;
 
 final class DeleteAction
 {

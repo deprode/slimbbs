@@ -9,7 +9,6 @@ use Respect\Validation\Validator;
 use RKA\Session;
 use Slim\Flash\Messages;
 use App\Classes\Config;
-use App\Traits\Validation;
 
 final class AdminConfigAction
 {
