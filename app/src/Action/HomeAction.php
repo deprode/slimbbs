@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Action;
 
 use Slim\Http\Request;
@@ -57,19 +58,20 @@ final class HomeAction
             $response,
             'home.twig',
             [
-                'csrf_name' => $csrf_name,
-                'csrf_value' => $csrf_value,
-                'data' => $data,
-                'message' => $message[0],
-                'error' => $error[0],
-                'errors' => $errors,
-                'count' => $data_count,
+                'csrf_name'    => $csrf_name,
+                'csrf_value'   => $csrf_value,
+                'data'         => $data,
+                'message'      => $message[0],
+                'error'        => $error[0],
+                'errors'       => $errors,
+                'count'        => $data_count,
                 'current_page' => $page,
-                'per_page' => $per_page,
-                'name' => $name,
-                'email' => $email
+                'per_page'     => $per_page,
+                'name'         => $name,
+                'email'        => $email
             ]
         );
+
         return $response;
     }
 }

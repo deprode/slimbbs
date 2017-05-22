@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Action;
 
 use Slim\Http\Request;
@@ -17,10 +18,10 @@ final class AuthAction
 
     public function __construct(Twig $view, LoggerInterface $logger, Session $session, Messages $flash)
     {
-        $this->view = $view;
-        $this->logger = $logger;
+        $this->view    = $view;
+        $this->logger  = $logger;
         $this->session = $session;
-        $this->flash = $flash;
+        $this->flash   = $flash;
     }
 
     public function dispatch(Request $request, Response $response)
@@ -48,11 +49,12 @@ final class AuthAction
             $response,
             'auth.twig',
             [
-                'csrf_name' => $csrf_name,
+                'csrf_name'  => $csrf_name,
                 'csrf_value' => $csrf_value,
-                'error' => $error[0]
+                'error'      => $error[0]
             ]
         );
+
         return $response;
     }
 }

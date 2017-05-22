@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Action;
 
 use Slim\Http\Request;
@@ -43,7 +44,7 @@ final class DeleteAction
         $input = $request->getParsedBody();
 
         // Validation
-        if($request->getAttribute('has_errors')){
+        if ($request->getAttribute('has_errors')) {
             $errors = $request->getAttribute('errors');
             $this->session->set('errors', $errors);
             $this->flash->addMessage('errorMessage', '入力に不適切な箇所があったため、書き込みを中断しました');
@@ -59,10 +60,10 @@ final class DeleteAction
         }
 
         if ($result === true) {
-            $this->logger->info("deleted success ".$input['id']);
+            $this->logger->info("deleted success " . $input['id']);
             $this->flash->addMessage('resultMessage', '削除に成功しました');
         } else {
-            $this->logger->info("deleted failed ".$input['id']);
+            $this->logger->info("deleted failed " . $input['id']);
             $this->flash->addMessage('resultMessage', '削除に失敗しました');
         }
 

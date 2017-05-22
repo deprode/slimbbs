@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Action;
 
 use Slim\Http\Request;

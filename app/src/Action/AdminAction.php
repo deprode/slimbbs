@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Action;
 
 use Slim\Http\Request;
@@ -80,11 +81,11 @@ final class AdminAction
             $response,
             'admin.twig',
             [
-                'csrf_name' => $csrf_name,
+                'csrf_name'  => $csrf_name,
                 'csrf_value' => $csrf_value,
-                'error' => $error[0],
-                'message' => $message[0],
-                'data' => $data
+                'error'      => $error[0],
+                'message'    => $message[0],
+                'data'       => $data
             ]
         );
         return $response;

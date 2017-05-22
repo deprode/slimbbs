@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Action;
 
 use Slim\Http\Request;
@@ -53,6 +54,7 @@ final class AdminConfigAction
                 'message' => $message[0]
             ]
         );
+
         return $response;
     }
 
