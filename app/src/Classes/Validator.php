@@ -4,7 +4,7 @@ use Respect\Validation\Validator as v;
 use App\Classes\Config;
 
 $container = $app->getContainer();
-$ng_word = $container->config->get('ngword');
+$ng_word = $container->config->get('ng_word');
 
 $translator = function ($message) {
     $messages = [
@@ -43,5 +43,5 @@ $adminDeleteValidators = [
 
 $adminConfigValidators = [
     'consecutive' => v::intVal()->min(0)->setName('投稿間隔'),
-    'ngword' => v::arrayType()->notEmpty()->each(v::stringType())->setName('NGワード')
+    'ng_word' => v::arrayType()->notEmpty()->each(v::stringType())->setName('NGワード')
 ];

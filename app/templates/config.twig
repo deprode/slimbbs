@@ -42,10 +42,10 @@
                 <input type="hidden" name="csrf_name" value="{{ csrf_name }}">
                 <input type="hidden" name="csrf_value" value="{{ csrf_value }}">
                 <div class="row">
-                    <div class="six columns" id="js-ngwords">
-                        <label for="ngword">禁止ワード</label>
-                        {% for c in config.ngword %}
-                            <input class="u-full-width" name="ngword[]" type="text" value="{{ c }}" maxlength="50">
+                    <div class="six columns" id="js-ng_words">
+                        <label for="ng_word">禁止ワード</label>
+                        {% for c in config.ng_word %}
+                            <input class="u-full-width" name="ng_word[]" type="text" value="{{ c }}" maxlength="50">
                         {% endfor %}
                     </div>
                 </div>
@@ -73,14 +73,14 @@
 {% endblock %}
 {% block javascripts %}
     <script type="text/javascript" charset="utf-8">
-        var ngwords = document.getElementById("js-ngwords");
+        var ng_words = document.getElementById("js-ng_words");
         var add = document.getElementById("js-add").addEventListener("click", function () {
             var new_input = document.createElement("input");
             new_input.setAttribute("type", "text");
             new_input.setAttribute("class", "u-full-width");
-            new_input.setAttribute("name", "ngword[]");
+            new_input.setAttribute("name", "ng_word[]");
             new_input.setAttribute("maxlength", "50");
-            ngwords.appendChild(new_input);
+            ng_words.appendChild(new_input);
             new_input.focus();
         });
     </script>
