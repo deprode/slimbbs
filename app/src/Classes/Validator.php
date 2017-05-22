@@ -4,7 +4,7 @@ use Respect\Validation\Validator as v;
 use App\Classes\Config;
 
 $container = $app->getContainer();
-$ng_word = $container->config->getConfig('ngword');
+$ng_word = $container->config->get('ngword');
 
 $translator = function ($message) {
     $messages = [

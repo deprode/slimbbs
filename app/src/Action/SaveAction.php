@@ -120,7 +120,7 @@ final class SaveAction
             return true;
         }
 
-        $time = $this->config->getConfig('consecutive');
+        $time = $this->config->get('consecutive');
         $pre_date = \DateTime::createFromFormat('Y-m-d H:i:s', $log->created);
         $check_date = new \DateTime("$time sec ago");
 

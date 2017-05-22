@@ -19,7 +19,7 @@ class Config
         }
     }
 
-    public function getConfig($key)
+    public function get($key)
     {
         if (array_key_exists($key, $this->config)) {
             return $this->config[$key];
@@ -40,7 +40,7 @@ class Config
     }
 
     // クラス内の$configsに格納されている設定を保存する
-    public function saveConfig()
+    public function save()
     {
         if (!$this->path || !$this->config) {
             return false;

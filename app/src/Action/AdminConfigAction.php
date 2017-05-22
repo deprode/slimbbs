@@ -75,7 +75,7 @@ final class AdminConfigAction
 
         $config = $this->format($input);
         $this->config->setConfigs($config);
-        $this->config->saveConfig();
+        $this->config->save();
 
         return $response->withRedirect('/admin/config/');
     }
