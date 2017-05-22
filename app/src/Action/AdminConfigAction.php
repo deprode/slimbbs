@@ -39,6 +39,7 @@ final class AdminConfigAction
 
         $configs = $this->config->getConfigs();
 
+        $message = $this->flash->getMessage('resultMessage');
         $error = $this->flash->getMessage('errorMessage');
 
         $this->view->render(
@@ -48,7 +49,8 @@ final class AdminConfigAction
                 'csrf_name' => $csrf_name,
                 'csrf_value' => $csrf_value,
                 'config' => $configs,
-                'error' => $error[0]
+                'error' => $error[0],
+                'message' => $message[0]
             ]
         );
         return $response;
@@ -76,6 +78,8 @@ final class AdminConfigAction
         $config = $this->format($input);
         $this->config->setConfigs($config);
         $this->config->save();
+
+        $this->flash->addMessage('errorMessage', '設定を更新しました');
 
         return $response->withRedirect('/admin/config/');
     }
