@@ -18,7 +18,8 @@ $translator = function ($message) {
         '{{name}} must be an URL'                                           => '{{name}}にはURLのみ書き込めます',
         '{{name}} must validate against {{regex}}'                          => '{{name}}には英数字かアンダーバーを使ってください',
         '{{name}} must be of the type array'                                => '{{name}}が選択されていません',
-        'Each item in {{name}} must be valid'                               => '{{name}}が不正な形式です'
+        'Each item in {{name}} must be valid'                               => '{{name}}が不正な形式です',
+        '{{name}} must not be in {{haystack}}'                              => '{{name}}にNGワードが含まれています',
     ];
     return $messages[$message];
 };
