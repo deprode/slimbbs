@@ -18,9 +18,6 @@ final class HomeAction
 
     private $log;
 
-    // 1ページに表示する投稿数
-    const DEFAULT_PER_PAGE = 10;
-
     public function __construct(Twig $view, LoggerInterface $logger, Session $session, Messages $flash, Log $log)
     {
         $this->view    = $view;
@@ -28,16 +25,6 @@ final class HomeAction
         $this->flash   = $flash;
         $this->session = $session;
         $this->log     = $log;
-    }
-
-    // データを表示するサイズに切り取る
-    public function dataSplice($data, $page, $per_page = self::DEFAULT_PER_PAGE)
-    {
-        if ($data) {
-            $data = array_splice($data, $page * $per_page, $per_page);
-        }
-
-        return $data;
     }
 
     // ホーム画面（トップページ）の表示
@@ -52,11 +39,11 @@ final class HomeAction
         $csrf_value = $request->getAttribute('csrf_value');
 
         // 表示するログの用意
+        $per_page = $this->log->getDefaultPerPage();
         $page = $request->getParam('page');
-        $per_page = self::DEFAULT_PER_PAGE;
-        $all_data = $this->log->dataRead();
+        $all_data = $this->log->readData();
+        $data = $this->log->spliceData($all_data, $page, $per_page);
         $data_count = count($all_data);
-        $data = $this->dataSplice($all_data, $page, $per_page);
 
         $message = $this->flash->getMessage('resultMessage');
         $error = $this->flash->getMessage('errorMessage');

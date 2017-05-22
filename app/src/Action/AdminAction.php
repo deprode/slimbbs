@@ -74,7 +74,7 @@ final class AdminAction
         $error = $this->flash->getMessage('errorMessage');
         $message = $this->flash->getMessage('resultMessage');
 
-        $data = $this->log->dataRead();
+        $data = $this->log->readData();
 
         $this->view->render(
             $response,

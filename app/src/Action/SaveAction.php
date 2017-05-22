@@ -115,7 +115,7 @@ final class SaveAction
     // 短時間に連続して書き込んでいるかチェックする
     public function checkConsecutivePost($data)
     {
-        $log = $this->log->dataReadWithNo(0);
+        $log = $this->log->readDataWithNo(0);
         if ($log === null) {
             return true;
         }

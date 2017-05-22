@@ -8,6 +8,8 @@ class Log
     private $past_dir;
     private $log_max;
 
+    const DEFAULT_PER_PAGE = 10;
+
     // クラス設定
     public function __construct($path, $past, $max)
     {
@@ -16,10 +18,15 @@ class Log
         $this->log_max  = $max;
     }
 
-    // N番目の投稿を読み込む
-    public function dataReadWithNo($post_no)
+    public function getDefaultPerPage()
     {
-        $data = $this->dataRead();
+        return self::DEFAULT_PER_PAGE;
+    }
+
+    // N番目の投稿を読み込む
+    public function readDataWithNo($post_no)
+    {
+        $data = $this->readData();
         $datum = array_splice($data, $post_no, 1);
         if (count($datum) === 0) {
             return null;
@@ -27,26 +34,28 @@ class Log
         return $datum[0];
     }
 
-    // 指定ページの投稿を読み込む
-    public function dataReadWithPage($page, $num)
+    // データを表示するサイズに切り取る
+    public static function spliceData($data, $page, $per_page = self::DEFAULT_PER_PAGE)
     {
-        $page = (int)$page;
-        $data = $this->dataRead();
-        return array_splice($data, $page * $num, $num);
+        if ($data && is_array($data)) {
+            $data = array_splice($data, $page * $per_page, $per_page);
+        }
+
+        return $data;
     }
 
     // 現在のログファイルから全てのデータの読み込み
-    public function dataRead($path = null)
+    public function readData($path = null)
     {
         if (is_null($path)) {
             $path = $this->log_path;
         }
-        $old_data = file_get_contents($path);
-        return json_decode($old_data);
+        $data = file_get_contents($path);
+        return json_decode($data);
     }
 
     // 投稿の書き込み
-    public function dataWrite($data, $path = null)
+    public function writeData($data, $path = null)
     {
         if (is_null($path)) {
             $path = $this->log_path;
@@ -61,7 +70,7 @@ class Log
             throw new \Exception("log file is not found or not readable.");
         }
 
-        $data = $this->dataRead($this->log_path);
+        $data = $this->readData($this->log_path);
         $data = $this->insertInput($data, $formatted_input);
 
         // 最大保存数を超えた分を切る
@@ -69,7 +78,7 @@ class Log
             array_splice($data, $this->log_max);
         }
 
-        $this->dataWrite($data);
+        $this->writeData($data);
     }
 
     // 投稿をログの先頭に入れる
@@ -122,9 +131,9 @@ class Log
 
         $filepath = $this->getDailyLogPath();
         if (is_writable($filepath)) {
-            $data = $this->dataRead($filepath);
+            $data = $this->readData($filepath);
             $data = $this->insertInput($data, $formatted_input);
-            $this->dataWrite($data, $filepath);
+            $this->writeData($data, $filepath);
         }
     }
 
@@ -146,7 +155,7 @@ class Log
             throw new \Exception("log file is not found or not readable.");
         }
 
-        $data = $this->dataRead();
+        $data = $this->readData();
         $index = $this->indexOfPostData($data, $id);
 
         // エラーチェック
@@ -160,15 +169,15 @@ class Log
 
         $del_data = array_splice($data, $index, 1);
         $del_data = $del_data[0];
-        $this->dataWrite($data);
+        $this->writeData($data);
 
         // 日別ログから削除
         if (isset($this->past_dir)) {
             $past_log = $this->past_dir . '/' . date_format(date_create($del_data->created), 'Ymd') . '.dat';
-            $past_data = $this->dataRead($past_log);
+            $past_data = $this->readData($past_log);
             $index = $this->indexOfPostData($past_data, $id);
             array_splice($past_data, $index, 1);
-            $this->dataWrite($past_data, $past_log);
+            $this->writeData($past_data, $past_log);
         }
 
         return true;
