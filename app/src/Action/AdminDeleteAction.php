@@ -55,7 +55,7 @@ final class AdminDeleteAction
 
         // 投稿を削除
         $ids = (isset($inputs['del'])) ? $inputs['del'] : [];
-        if ($request->getAttribute('csrf_status') !== false && count($ids) > 0) {
+        if (count($ids) > 0) {
             $count = 0;
             foreach ($ids as $id) {
                 $count += $this->log->deleteDataForAdmin($id);
