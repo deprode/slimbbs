@@ -14,6 +14,10 @@ $app->post('/delete/', 'App\Action\DeleteAction:dispatch')
     ->setName('delete')
     ->add(new \DavidePastore\Slim\Validation\Validation($deleteValidators, $translator));
 
+$app->get('/past/', 'App\Action\PastAction:dispatch')
+    ->setName('past')
+    ->add(new DavidePastore\Slim\Validation\Validation($pastValidators, $translator));
+
 $app->get('/auth/', 'App\Action\AuthAction:dispatch')
     ->setName('auth');
 

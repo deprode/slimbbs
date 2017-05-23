@@ -113,8 +113,6 @@
         </div>
         <hr>
     {% endfor %}
-
-    <button onclick="javascript: window.location.reload(true)">リロード</button>
     <ul class="pagination">
         {% if current_page > 0 %}
             <li>
@@ -137,6 +135,10 @@
             </li>
         {% endif %}
     </ul>
+
+    <button onclick="javascript: window.location.reload(true)">リロード</button>
+    <a class="button" href="{{ path_for('past') }}">過去ログ</a>
+
 {% endblock %}
 {% block javascripts %}
     <script type="text/javascript" charset="utf-8">

@@ -100,6 +100,16 @@ $container['App\Action\DeleteAction'] = function ($c) {
     return $action;
 };
 
+$container['App\Action\PastAction'] = function ($c) {
+    $action = new App\Action\PastAction(
+        $c->get('view'),
+        $c->get('logger'),
+        $c->get('flash'),
+        $c->get('log')
+    );
+    return $action;
+};
+
 $container['App\Action\AuthAction'] = function ($c) {
     $action = new App\Action\AuthAction(
         $c->get('view'),

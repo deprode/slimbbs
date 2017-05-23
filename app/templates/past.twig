@@ -1,0 +1,65 @@
+{% extends 'base.twig' %}
+{% block title %}過去ログ | 掲示板{% endblock %}
+{% block stylesheets %}
+    <!--[if lt IE 10]>
+    <style type="text/css">.hidden {
+        display: inline;
+    }</style>
+    <![endif]-->
+{% endblock %}
+{% block body %}
+    <h1>過去ログ</h1>
+    <form action="{{ path_for('past') }}" method="get" accept-charset="utf-8">
+        <div class="row">
+            <div class="three columns">
+                <input class="u-full-width" name="date" type="date" value="{{ form_date }}">
+                <input type="submit" value="過去ログを見る">
+            </div>
+        </div>
+    </form>
+    <hr>
+    <h2>{{ form_date }}</h2>
+    {% if error %}
+        <div>
+            {{ error }}
+        </div>
+    {% endif %}
+    <hr>
+    {% if message %}
+        <div>
+            {{ message | nl2br }}
+        </div>
+        <hr>
+    {% endif %}
+    {% if data %}
+        {% for d in data %}
+            <div>
+                {% if d.name and d.email %}
+                    名前:<a href="mailto:{{ d.email }}">{{ d.name }}</a>
+                {% elseif d.name == false and d.email %}
+                    名前:<a href="mailto:{{ d.email }}">＿</a>
+                {% elseif d.name == false %}
+                    名前:＿
+                {% else %}
+                    名前:{{ d.name }}
+                {% endif %}
+                <!-- <br> -->
+                ID.{{ d.id }}<br>
+
+                {% if d.subject %}
+                    <b>{{ d.subject }}</b><br>
+                {% else %}
+                    <b>無題</b><br>
+                {% endif %}
+
+                {{ d.body | nl2br }}<br>
+
+                {% if d.url %}
+                    URL: <a href="{{ d.url }}">{{ d.url }}</a><br>
+                {% endif %}
+                {{ d.created }}
+            </div>
+            <hr>
+        {% endfor %}
+    {% endif %}
+{% endblock %}

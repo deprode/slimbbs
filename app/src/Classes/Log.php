@@ -50,7 +50,10 @@ class Log
         if (is_null($path)) {
             $path = $this->log_path;
         }
-        $data = file_get_contents($path);
+        $data = null;
+        if (file_exists($path)) {
+            $data = file_get_contents($path);
+        }
         return json_decode($data);
     }
 
@@ -105,6 +108,13 @@ class Log
         $filepath = $this->past_dir . '/' . $date_str . '.dat';
 
         return $filepath;
+    }
+
+    // 過去ログを取得
+    public function readDailyLog($date_str = null)
+    {
+        $path = $this->getDailyLogPath($date_str);
+        return $this->readData($path);
     }
 
     // 日別ログファイルを作成
