@@ -63,8 +63,10 @@
             {% else %}
                 {{ count }}件の書き込み中
                 {{ offset+1 }}
-                {% if count > (offset + per_page) %}
-                    〜{{ offset + per_page }}
+                {% if count >= (offset + per_page) %}
+                    〜 {{ offset + per_page }}
+                {% elseif 1 != data|length %}
+                    〜 {{ count }}
                 {% endif %}
                 番目を表示
             {% endif %}
@@ -124,14 +126,15 @@
                 <a href="{{ path_for('home') }}?page={{ current_page-1 }}" title="">前へ</a>
             </li>
         {% endif %}
-        {% if current_page < (count // per_page) %}
+        {% set last_page = ((count / per_page) | round(0, 'ceil'))-1 %}
+        {% if (current_page+1) < last_page %}
             <li>
                 <a href="{{ path_for('home') }}?page={{ current_page+1 }}" title="">次へ</a>
             </li>
         {% endif %}
-        {% if current_page+1 < (count // per_page) %}
+        {% if current_page < last_page %}
             <li>
-                <a href="{{ path_for('home') }}?page={{ (count / per_page) | round(0,'floor') }}" title="">最後へ</a>
+                <a href="{{ path_for('home') }}?page={{ last_page }}" title="">最後へ</a>
             </li>
         {% endif %}
     </ul>

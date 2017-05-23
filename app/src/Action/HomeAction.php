@@ -43,7 +43,7 @@ final class HomeAction
 
         // 表示するログの用意
         $per_page = $this->config->get('per_page');
-        $page = $request->getParam('page');
+        $page = ($request->getParam('page')) ? $request->getParam('page') : 0;
         $all_data = $this->log->readData();
         $data = $this->log->spliceData($all_data, $page, $per_page);
         $data_count = count($all_data);
