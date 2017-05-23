@@ -87,7 +87,7 @@ final class AdminConfigAction
     }
 
     // 入力をiniで保存するために配列に入れる
-    public function format($input)
+    private function format($input)
     {
         $ng_word = $input["ng_word"];
         $consecutive = $input["consecutive"];

@@ -67,7 +67,7 @@ final class AdminDeleteAction
         return $response->withRedirect('/admin/');
     }
 
-    public function getResultMessage($count)
+    private function getResultMessage($count)
     {
         if ((int)$count === 0) {
             return '削除できませんでした。';

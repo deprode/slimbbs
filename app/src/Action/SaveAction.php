@@ -89,13 +89,13 @@ final class SaveAction
     }
 
     // パスワード生成
-    public function createPassword($password)
+    private function createPassword($password)
     {
         return password_hash($password, PASSWORD_DEFAULT);
     }
 
     // 保存用に入力を整形する
-    public function formatInput($input)
+    private function formatInput($input)
     {
         $now = new \DateTime();
         $pass = mb_strlen($input['del_pass']) > 0 ? $this->createPassword($input['del_pass']) : '';
@@ -114,7 +114,7 @@ final class SaveAction
     }
 
     // 短時間に連続して書き込んでいるかチェックする
-    public function checkConsecutivePost($data)
+    private function checkConsecutivePost($data)
     {
         $log = $this->log->readDataWithNo(0);
         if ($log === null) {

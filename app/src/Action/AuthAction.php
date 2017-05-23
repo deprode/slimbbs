@@ -39,7 +39,7 @@ final class AuthAction
     }
 
     // ログイン画面
-    public function renderAuth(Request $request, Response $response)
+    private function renderAuth(Request $request, Response $response)
     {
         $csrf_name = $request->getAttribute('csrf_name');
         $csrf_value = $request->getAttribute('csrf_value');

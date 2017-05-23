@@ -67,7 +67,7 @@ final class AdminAction
     }
 
     // 管理画面を描画
-    public function renderAdmin(Request $request, Response $response)
+    private function renderAdmin(Request $request, Response $response)
     {
         $csrf_name = $request->getAttribute('csrf_name');
         $csrf_value = $request->getAttribute('csrf_value');
@@ -91,7 +91,7 @@ final class AdminAction
         return $response;
     }
 
-    protected function checkPassword($admin_id, $password)
+    private function checkPassword($admin_id, $password)
     {
         return (string)$admin_id === $this->admin_id && password_verify($password, $this->admin_pass);
     }
