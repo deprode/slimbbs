@@ -18,11 +18,6 @@ class Log
         $this->log_max  = $max;
     }
 
-    public function getDefaultPerPage()
-    {
-        return self::DEFAULT_PER_PAGE;
-    }
-
     // N番目の投稿を読み込む
     public function readDataWithNo($post_no)
     {

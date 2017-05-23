@@ -60,12 +60,16 @@
                         <button type="button" id="js-add">追加</button>
                     </div>
                 </div>
-
                 <div class="row">
                     <div class="five columns">
                         <label for="consecutive">次の投稿までの時間（秒）</label>
-                        <input class="u-full-width" name="consecutive" type="text" value="{{ config.consecutive }}"
-                               maxlength="50">
+                        <input class="u-full-width" title="consecutive" name="consecutive" type="text" value="{{ config.consecutive }}">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="five columns">
+                        <label for="per_page">1ページの表示数</label>
+                        <input class="u-full-width" title="per_page" name="per_page" type="text" value="{{ config.per_page }}">
                     </div>
                 </div>
                 <div class="row">

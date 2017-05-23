@@ -70,7 +70,8 @@ $container['App\Action\HomeAction'] = function ($c) {
         $c->get('logger'),
         $c->get('session'),
         $c->get('flash'),
-        $c->get('log')
+        $c->get('log'),
+        $c->get('config')
     );
     return $action;
 };

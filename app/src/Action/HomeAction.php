@@ -2,6 +2,7 @@
 
 namespace App\Action;
 
+use App\Classes\Config;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Views\Twig;
@@ -16,16 +17,17 @@ final class HomeAction
     private $logger;
     private $flash;
     private $session;
-
     private $log;
+    private $config;
 
-    public function __construct(Twig $view, LoggerInterface $logger, Session $session, Messages $flash, Log $log)
+    public function __construct(Twig $view, LoggerInterface $logger, Session $session, Messages $flash, Log $log, Config $config)
     {
         $this->view    = $view;
         $this->logger  = $logger;
         $this->flash   = $flash;
         $this->session = $session;
         $this->log     = $log;
+        $this->config  = $config;
     }
 
     // ホーム画面（トップページ）の表示
@@ -40,7 +42,7 @@ final class HomeAction
         $csrf_value = $request->getAttribute('csrf_value');
 
         // 表示するログの用意
-        $per_page = $this->log->getDefaultPerPage();
+        $per_page = $this->config->get('per_page');
         $page = $request->getParam('page');
         $all_data = $this->log->readData();
         $data = $this->log->spliceData($all_data, $page, $per_page);

@@ -67,8 +67,6 @@ final class AdminConfigAction
             return $response;
         }
 
-        $input = $request->getParsedBody();
-
         // Validation
         if($request->getAttribute('has_errors')){
             $errors = $request->getAttribute('errors');
@@ -76,6 +74,9 @@ final class AdminConfigAction
             $this->flash->addMessage('errorMessage', '入力に不適切な箇所があったため、書き込みを中断しました');
             return $response->withRedirect('/admin/config/');
         }
+
+
+        $input = $request->getParsedBody();
 
         $config = $this->format($input);
         $this->config->setConfigs($config);
@@ -91,6 +92,7 @@ final class AdminConfigAction
     {
         $ng_word = (array)$input["ng_word"];
         $consecutive = intval($input["consecutive"]);
+        $per_page = intval($input['per_page']);
 
         $ng_word = array_filter($ng_word, function ($var) {
             return !empty($var);
@@ -98,7 +100,8 @@ final class AdminConfigAction
 
         $data = [
             'ng_word' => $ng_word,
-            'consecutive' => $consecutive
+            'consecutive' => $consecutive,
+            'per_page' => $per_page
         ];
 
         return $data;

@@ -20,7 +20,8 @@ $translator = function ($message) {
         '{{name}} must be of the type array'                                => '{{name}}が選択されていません',
         'Each item in {{name}} must be valid'                               => '{{name}}が不正な形式です',
         '{{name}} must not be in {{haystack}}'                              => '{{name}}にNGワードが含まれています',
-        '{{name}} must be a valid date. Sample format: {{format}}'          => '{{name}}が日付の形式（{{format}}）ではありません'
+        '{{name}} must be a valid date. Sample format: {{format}}'          => '{{name}}が日付の形式（{{format}}）ではありません',
+        '{{name}} must be greater than or equal to {{interval}}'            => '{{name}}は{{interval}}より大きい値にしてください'
     ];
     return $messages[$message];
 };
@@ -45,7 +46,8 @@ $adminDeleteValidators = [
 
 $adminConfigValidators = [
     'consecutive' => v::intVal()->min(0)->setName('投稿間隔'),
-    'ng_word' => v::arrayType()->notEmpty()->each(v::stringType())->setName('NGワード')
+    'ng_word' => v::arrayType()->notEmpty()->each(v::stringType())->setName('NGワード'),
+    'per_page' => v::intVal()->min(1)->setName('1ページの表示数')
 ];
 
 $pastValidators = [
