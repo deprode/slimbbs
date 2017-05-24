@@ -17,3 +17,9 @@ input[type="submit"] {
 .hidden {
     display: none;
 }
+
+ul.pagination {
+    display: flex;
+    list-style: none;
+    justify-content: space-between
+}

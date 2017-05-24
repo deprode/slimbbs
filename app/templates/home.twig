@@ -115,29 +115,41 @@
         </div>
         <hr>
     {% endfor %}
-    <ul class="pagination">
-        {% if current_page > 0 %}
-            <li>
-                <a href="{{ path_for('home') }}?page=0" title="">最初へ</a>
-            </li>
-        {% endif %}
-        {% if current_page > 1 %}
-            <li>
-                <a href="{{ path_for('home') }}?page={{ current_page-1 }}" title="">前へ</a>
-            </li>
-        {% endif %}
-        {% set last_page = ((count / per_page) | round(0, 'ceil'))-1 %}
-        {% if (current_page+1) < last_page %}
-            <li>
-                <a href="{{ path_for('home') }}?page={{ current_page+1 }}" title="">次へ</a>
-            </li>
-        {% endif %}
-        {% if current_page < last_page %}
-            <li>
-                <a href="{{ path_for('home') }}?page={{ last_page }}" title="">最後へ</a>
-            </li>
-        {% endif %}
-    </ul>
+        <div class="row">
+            <div class="four columns">
+                <ul class="pagination">
+                        <li>
+                            {% if current_page > 0 %}
+                            <a href="{{ path_for('home') }}?page=0" title="最初のページヘ">最初へ</a>
+                            {% else %}
+                                最初へ
+                            {% endif %}
+                        </li>
+                        <li>
+                            {% if current_page > 0 %}
+                            <a href="{{ path_for('home') }}?page={{ current_page-1 }}" title="前のページヘ">前へ</a>
+                            {% else %}
+                                前へ
+                            {% endif %}
+                        </li>
+                    {% set last_page = ((count / per_page) | round(0, 'ceil'))-1 %}
+                        <li>
+                            {% if current_page < last_page %}
+                            <a href="{{ path_for('home') }}?page={{ current_page+1 }}" title="次のページヘ">次へ</a>
+                            {% else %}
+                                次へ
+                            {% endif %}
+                        </li>
+                        <li>
+                            {% if current_page < last_page %}
+                            <a href="{{ path_for('home') }}?page={{ last_page }}" title="最後のページヘ">最後へ</a>
+                            {% else %}
+                                最後へ
+                            {% endif %}
+                        </li>
+                </ul>
+            </div>
+        </div>
 
     <button onclick="javascript: window.location.reload(true)">リロード</button>
     <a class="button" href="{{ path_for('past') }}">過去ログ</a>
