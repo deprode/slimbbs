@@ -55,6 +55,7 @@
         </div>
     </form>
     <hr>
+    {% include 'menu.twig' %}
     <div>
         {% set offset = pagination.offset %}
         {% set count = pagination.count %}
@@ -153,10 +154,6 @@
                 {% endif %}
             </div>
         </div>
-
-    <button onclick="javascript: window.location.reload(true)">リロード</button>
-    <a class="button" href="{{ path_for('past') }}">過去ログ</a>
-
 {% endblock %}
 {% block javascripts %}
     <script type="text/javascript" charset="utf-8">

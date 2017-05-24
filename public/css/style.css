@@ -14,8 +14,18 @@ input[type="submit"] {
     line-height: 30px;
 }
 
+hr {
+    margin-top: 2.5rem;
+    margin-bottom: 3rem;
+}
+
 .hidden {
     display: none;
+}
+
+.menu a {
+    display: inline-block;
+    margin: 0 2rem 0 0;
 }
 
 ul.pagination {
