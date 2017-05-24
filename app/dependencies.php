@@ -47,6 +47,11 @@ $container['config'] = function ($c) {
     return new \App\Classes\Config($settings['config']['path']);
 };
 
+// pagination
+$container['pagination'] = function ($c) {
+    return new \App\Classes\Pagination();
+};
+
 // -----------------------------------------------------------------------------
 // Service factories
 // -----------------------------------------------------------------------------
@@ -71,7 +76,8 @@ $container['App\Action\HomeAction'] = function ($c) {
         $c->get('session'),
         $c->get('flash'),
         $c->get('log'),
-        $c->get('config')
+        $c->get('config'),
+        $c->get('pagination')
     );
     return $action;
 };

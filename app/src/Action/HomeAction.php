@@ -10,6 +10,7 @@ use Psr\Log\LoggerInterface;
 use RKA\Session;
 use Slim\Flash\Messages;
 use App\Classes\Log;
+use App\Classes\Pagination;
 
 final class HomeAction
 {
@@ -19,15 +20,17 @@ final class HomeAction
     private $session;
     private $log;
     private $config;
+    private $pagination;
 
-    public function __construct(Twig $view, LoggerInterface $logger, Session $session, Messages $flash, Log $log, Config $config)
+    public function __construct(Twig $view, LoggerInterface $logger, Session $session, Messages $flash, Log $log, Config $config, Pagination $pagination)
     {
-        $this->view    = $view;
-        $this->logger  = $logger;
-        $this->flash   = $flash;
-        $this->session = $session;
-        $this->log     = $log;
-        $this->config  = $config;
+        $this->view       = $view;
+        $this->logger     = $logger;
+        $this->flash      = $flash;
+        $this->session    = $session;
+        $this->log        = $log;
+        $this->config     = $config;
+        $this->pagination = $pagination;
     }
 
     // ホーム画面（トップページ）の表示
@@ -48,6 +51,8 @@ final class HomeAction
         $data = $this->log->spliceData($all_data, $page, $per_page);
         $data_count = count($all_data);
 
+        $this->pagination->setting($data_count, $page, $per_page);
+
         $message = $this->flash->getMessage('resultMessage');
         $error = $this->flash->getMessage('errorMessage');
 
@@ -66,11 +71,9 @@ final class HomeAction
                 'message'      => $message[0],
                 'error'        => $error[0],
                 'errors'       => $errors,
-                'count'        => $data_count,
-                'current_page' => $page,
-                'per_page'     => $per_page,
                 'name'         => $name,
-                'email'        => $email
+                'email'        => $email,
+                'pagination'   => $this->pagination
             ]
         );
 

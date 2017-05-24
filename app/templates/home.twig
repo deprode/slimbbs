@@ -56,7 +56,9 @@
     </form>
     <hr>
     <div>
-        {% set offset = current_page * per_page %}
+        {% set offset = pagination.offset %}
+        {% set count = pagination.count %}
+        {% set per_page = pagination.perpage %}
         {% spaceless %}
             {% if count == 0 %}
                 まだ書き込みはありません。
@@ -117,37 +119,38 @@
     {% endfor %}
         <div class="row">
             <div class="four columns">
-                <ul class="pagination">
+                {% if pagination.enable %}
+                    <ul class="pagination">
                         <li>
-                            {% if current_page > 0 %}
+                            {% if pagination.firstpage %}
                             <a href="{{ path_for('home') }}?page=0" title="最初のページヘ">最初へ</a>
                             {% else %}
                                 最初へ
                             {% endif %}
                         </li>
                         <li>
-                            {% if current_page > 0 %}
-                            <a href="{{ path_for('home') }}?page={{ current_page-1 }}" title="前のページヘ">前へ</a>
+                            {% if pagination.firstpage %}
+                            <a href="{{ path_for('home') }}?page={{ pagination.currentpage-1 }}" title="前のページヘ">前へ</a>
                             {% else %}
                                 前へ
                             {% endif %}
                         </li>
-                    {% set last_page = ((count / per_page) | round(0, 'ceil'))-1 %}
                         <li>
-                            {% if current_page < last_page %}
-                            <a href="{{ path_for('home') }}?page={{ current_page+1 }}" title="次のページヘ">次へ</a>
+                            {% if pagination.lastpage %}
+                            <a href="{{ path_for('home') }}?page={{ pagination.currentpage+1 }}" title="次のページヘ">次へ</a>
                             {% else %}
                                 次へ
                             {% endif %}
                         </li>
                         <li>
-                            {% if current_page < last_page %}
-                            <a href="{{ path_for('home') }}?page={{ last_page }}" title="最後のページヘ">最後へ</a>
+                            {% if pagination.lastpage %}
+                            <a href="{{ path_for('home') }}?page={{ pagination.lastpagenum }}" title="最後のページヘ">最後へ</a>
                             {% else %}
                                 最後へ
                             {% endif %}
                         </li>
-                </ul>
+                    </ul>
+                {% endif %}
             </div>
         </div>
 
