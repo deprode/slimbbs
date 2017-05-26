@@ -2,6 +2,7 @@
 
 namespace App\Action;
 
+use App\Classes\Password;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Views\Twig;
@@ -22,6 +23,7 @@ final class SaveAction
     private $config;
 
     private $log;
+    private $password;
 
     public function __construct(
         Twig $view,
@@ -30,7 +32,8 @@ final class SaveAction
         Session $session,
         Messages $flash,
         Log $log,
-        Config $config
+        Config $config,
+        Password $password
     ) {
         $this->view     = $view;
         $this->logger   = $logger;
@@ -39,6 +42,7 @@ final class SaveAction
         $this->flash    = $flash;
         $this->log      = $log;
         $this->config   = $config;
+        $this->password = $password;
     }
 
     public function dispatch(Request $request, Response $response)
@@ -88,17 +92,11 @@ final class SaveAction
         return $response->withRedirect('/');
     }
 
-    // パスワード生成
-    private function createPassword($password)
-    {
-        return password_hash($password, PASSWORD_DEFAULT);
-    }
-
     // 保存用に入力を整形する
     private function formatInput($input)
     {
         $now = new \DateTime();
-        $pass = mb_strlen($input['del_pass']) > 0 ? $this->createPassword($input['del_pass']) : '';
+        $pass = mb_strlen($input['del_pass']) > 0 ? $this->password->toHashPassword($input['del_pass']) : '';
 
         return [
             'id'       => bin2hex(openssl_random_pseudo_bytes(6)),

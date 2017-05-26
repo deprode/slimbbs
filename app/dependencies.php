@@ -34,10 +34,16 @@ $container['session'] = function ($c) {
     return new \RKA\Session();
 };
 
+// Password
+$container['password'] = function ($c) {
+    return new \App\Classes\Password();
+};
+
 // Posts log
 $container['log'] = function ($c) {
     $settings = $c->get('settings');
     $log = new \App\Classes\Log($settings['log']['path'], $settings['log']['past'], $settings['log']['max']);
+    $log->setPassword($c->get('password'));
     return $log;
 };
 
@@ -90,7 +96,8 @@ $container['App\Action\SaveAction'] = function ($c) {
         $c->get('session'),
         $c->get('flash'),
         $c->get('log'),
-        $c->get('config')
+        $c->get('config'),
+        $c->get('password')
     );
     return $action;
 };

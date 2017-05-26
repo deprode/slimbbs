@@ -1,12 +1,14 @@
 <?php
+
 namespace App\Classes;
 
 class Log
 {
-
     private $log_path;
     private $past_dir;
     private $log_max;
+
+    private $password;
 
     const DEFAULT_PER_PAGE = 10;
 
@@ -16,6 +18,11 @@ class Log
         $this->log_path = $path;
         $this->past_dir = $past;
         $this->log_max  = $max;
+    }
+
+    public function setPassword(Password $password)
+    {
+        $this->password = $password;
     }
 
     // N番目の投稿を読み込む
@@ -167,7 +174,7 @@ class Log
         if ($index < 0) {
             // 投稿が見つからない
             return false;
-        } elseif (!$this->checkPassword($del_pass, $data[$index]->del_pass)) {
+        } elseif (isset($this->password) && !$this->password->checkPassword($del_pass, $data[$index]->del_pass)) {
             // 削除パスが違う
             return false;
         }
@@ -198,10 +205,5 @@ class Log
     public function deleteDataForAdmin($id)
     {
         return $this->deleteData($id);
-    }
-
-    private function checkPassword($input_pass, $del_pass)
-    {
-        return is_null($input_pass) || password_verify((string)$input_pass, $del_pass);
     }
 }
