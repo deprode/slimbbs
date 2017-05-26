@@ -2,3 +2,4 @@ vendor
 log/app.log
 cache/*
 dat/past/*
+logs/debug/*

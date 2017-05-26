@@ -13,3 +13,8 @@ $app->add($guard);
 $app->add(
     new \RKA\Middleware\IpAddress()
 );
+
+// デバッグ補助
+$settings = $container->get('settings')['debugbar'];
+$provider = new Kitchenu\Debugbar\ServiceProvider($settings);
+$provider->register($app);

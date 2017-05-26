@@ -35,5 +35,13 @@ return [
             'id' => 'admin',
             'password' => '$2y$10$eiI5uJPCp6WBd/urzxhiNe2wcJgLtiGa0DNzJVVWZ6Q0.XWh8evhG',
         ],
+
+        // debugging
+        'debugbar' => [
+            'storage' => [
+                'enabled' => true,
+                'path' => __DIR__. '/../logs/debug/',
+            ],
+        ],
     ],
 ];
