@@ -10,9 +10,9 @@ class Pagination
 
     public function setting($all_data_length, $current_page, $per_page)
     {
-        $this->all_data_length = $all_data_length;
-        $this->current_page = $current_page;
-        $this->per_page = $per_page;
+        $this->all_data_length = (int)$all_data_length;
+        $this->current_page = ($current_page > 0) ? (int)$current_page : 0;
+        $this->per_page = ($per_page > 0) ? (int)$per_page : 1;
     }
 
     public function getCurrentPage()
@@ -42,6 +42,9 @@ class Pagination
 
     public function lastPageNum()
     {
+        if ($this->per_page <= 0 || $this->all_data_length <= 0) {
+            return 0;
+        }
         return (ceil($this->all_data_length / $this->per_page))-1;
     }
 
