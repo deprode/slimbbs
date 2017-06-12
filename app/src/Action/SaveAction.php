@@ -70,7 +70,7 @@ final class SaveAction
 
         // IPアドレスの取得
         $input['host'] = gethostbyaddr($request->getAttribute('ip_address'));
-        if (!$this->checkConsecutivePost($input)) {
+        if (!$this->checkConsecutivePost($input['host'])) {
             $this->flash->addMessage('errorMessage', '時間をおいて書き込んでください。');
             return $response->withRedirect('/');
         }
@@ -112,7 +112,7 @@ final class SaveAction
     }
 
     // 短時間に連続して書き込んでいるかチェックする
-    private function checkConsecutivePost($data)
+    private function checkConsecutivePost($host)
     {
         $log = $this->log->readDataWithNo(0);
         if ($log === null) {
@@ -123,7 +123,7 @@ final class SaveAction
         $pre_date = \DateTime::createFromFormat('Y-m-d H:i:s', $log->created);
         $check_date = new \DateTime("$time sec ago");
 
-        if ($log->host === $data['host'] && $pre_date < $check_date) {
+        if ($log->host === $host && $pre_date < $check_date) {
             return true;
         }
 
