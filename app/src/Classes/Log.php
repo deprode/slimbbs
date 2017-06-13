@@ -13,7 +13,7 @@ class Log
     const DEFAULT_PER_PAGE = 10;
 
     // クラス設定
-    public function __construct($path, $past, $max)
+    public function __construct(string $path, string $past, int $max)
     {
         $this->log_path = $path;
         $this->past_dir = $past;
@@ -26,7 +26,7 @@ class Log
     }
 
     // N番目の投稿を読み込む
-    public function readDataWithNo($post_no)
+    public function readDataWithNo(int $post_no)
     {
         $data = $this->readData();
         $datum = array_splice($data, $post_no, 1);
@@ -37,9 +37,9 @@ class Log
     }
 
     // データを表示するサイズに切り取る
-    public static function spliceData($data, $page, $per_page = self::DEFAULT_PER_PAGE)
+    public static function spliceData(array $data, int $page, int $per_page = self::DEFAULT_PER_PAGE)
     {
-        if ($data && is_array($data)) {
+        if ($data) {
             $data = array_splice($data, $page * $per_page, $per_page);
         }
 
@@ -47,7 +47,7 @@ class Log
     }
 
     // 現在のログファイルから全てのデータの読み込み
-    public function readData($path = null)
+    public function readData(string $path = null)
     {
         if (is_null($path)) {
             $path = $this->log_path;
@@ -60,7 +60,7 @@ class Log
     }
 
     // 投稿の書き込み
-    public function writeData($data, $path = null)
+    public function writeData(array $data, string $path = null)
     {
         if (is_null($path)) {
             $path = $this->log_path;
@@ -69,7 +69,7 @@ class Log
     }
 
     // 投稿を保存する
-    public function saveData($formatted_input)
+    public function saveData(array $formatted_input)
     {
         if (!is_readable($this->log_path)) {
             throw new \Exception("log file is not found or not readable.");
@@ -87,7 +87,7 @@ class Log
     }
 
     // 投稿をログの先頭に入れる
-    public function insertInput($data, $formatted_input)
+    public function insertInput(array $data = null, array $formatted_input = null)
     {
         if (is_array($data) && count($data) > 0) {
             array_unshift($data, $formatted_input);
@@ -99,7 +99,7 @@ class Log
     }
 
     // 日別ログのパスを取得
-    private function getDailyLogPath($date_str = null)
+    private function getDailyLogPath(string $date_str = null)
     {
         // パスがなければ今日の日付でパスを作成
         if (is_null($date_str)) {
@@ -113,7 +113,7 @@ class Log
     }
 
     // 過去ログを取得
-    public function readDailyLog($date_str = null)
+    public function readDailyLog(string $date_str = null)
     {
         $path = $this->getDailyLogPath($date_str);
         return $this->readData($path);
@@ -135,7 +135,7 @@ class Log
     }
 
     // 日別ログに書き込み
-    public function writeDailyLog($formatted_input)
+    public function writeDailyLog(array $formatted_input)
     {
         if (!is_dir($this->past_dir)) {
             throw new \Exception("past directory is not found or not readable.");
@@ -150,10 +150,10 @@ class Log
     }
 
     // ログ内にある指定した投稿IDのインデックスを返す
-    public function indexOfPostData($data, $id)
+    public function indexOfPostData(array $data, string $id)
     {
         for ($i=0; $i < count($data); $i++) {
-            if ($data[$i]->id === (string)$id) {
+            if ($data[$i]->id === $id) {
                 return $i;
             }
         }
@@ -161,7 +161,7 @@ class Log
     }
 
     // ログの削除
-    private function deleteData($id, $del_pass = null)
+    private function deleteData(string $id, string $del_pass = null)
     {
         if (!is_readable($this->log_path)) {
             throw new \Exception("log file is not found or not readable.");
@@ -196,13 +196,13 @@ class Log
     }
 
     // 削除（ユーザ側からパスをつけて呼ぶ）
-    public function deleteDataForUser($id, $del_pass)
+    public function deleteDataForUser(string $id, string $del_pass)
     {
         return $this->deleteData($id, $del_pass);
     }
 
     // 削除（管理側からパスなしで呼ぶ）
-    public function deleteDataForAdmin($id)
+    public function deleteDataForAdmin(string $id)
     {
         return $this->deleteData($id);
     }
