@@ -75,7 +75,7 @@ final class SaveAction
             return $response->withRedirect('/');
         }
 
-        $data = $this->formatInput($input);
+        $data = $this->log->generateLogData($input);
 
         // ログの保存
         try {
@@ -90,25 +90,6 @@ final class SaveAction
         $this->flash->addMessage('resultMessage', '書き込みに成功しました');
 
         return $response->withRedirect('/');
-    }
-
-    // 保存用に入力を整形する
-    private function formatInput($input)
-    {
-        $now = new \DateTime();
-        $pass = mb_strlen($input['del_pass']) > 0 ? $this->password->toHashPassword($input['del_pass']) : '';
-
-        return [
-            'id'       => bin2hex(openssl_random_pseudo_bytes(6)),
-            'name'     => $input['name'],
-            'subject'  => $input['subject'],
-            'body'     => $input['body'],
-            'email'    => $input['email'],
-            'url'      => $input['url'],
-            'del_pass' => $pass,
-            'host'     => $input['host'],
-            'created'  => $now->format('Y-m-d H:i:s')
-        ];
     }
 
     // 短時間に連続して書き込んでいるかチェックする

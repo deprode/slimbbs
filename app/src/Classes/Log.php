@@ -25,6 +25,11 @@ class Log
         $this->password = $password;
     }
 
+    public function generateLogData($data)
+    {
+        return new LogData($data);
+    }
+
     // N番目の投稿を読み込む
     public function readDataWithNo(int $post_no)
     {
@@ -69,14 +74,14 @@ class Log
     }
 
     // 投稿を保存する
-    public function saveData(array $formatted_input)
+    public function saveData(LogData $log_data)
     {
         if (!is_readable($this->log_path)) {
             throw new \Exception("log file is not found or not readable.");
         }
 
         $data = $this->readData($this->log_path);
-        $data = $this->insertInput($data, $formatted_input);
+        $data = $this->insertInput($data, $log_data);
 
         // 最大保存数を超えた分を切る
         if (count($data) > $this->log_max) {
@@ -87,12 +92,12 @@ class Log
     }
 
     // 投稿をログの先頭に入れる
-    public function insertInput(array $data = null, array $formatted_input = null)
+    public function insertInput(array $data = null, LogData $log_data = null)
     {
         if (is_array($data) && count($data) > 0) {
-            array_unshift($data, $formatted_input);
+            array_unshift($data, $log_data->getData());
         } else {
-            $data = [$formatted_input];
+            $data = [$log_data->getData()];
         }
 
         return $data;
@@ -135,7 +140,7 @@ class Log
     }
 
     // 日別ログに書き込み
-    public function writeDailyLog(array $formatted_input)
+    public function writeDailyLog(LogData $log_data)
     {
         if (!is_dir($this->past_dir)) {
             throw new \Exception("past directory is not found or not readable.");
@@ -144,7 +149,7 @@ class Log
         $filepath = $this->getDailyLogPath();
         if (is_writable($filepath)) {
             $data = $this->readData($filepath);
-            $data = $this->insertInput($data, $formatted_input);
+            $data = $this->insertInput($data, $log_data);
             $this->writeData($data, $filepath);
         }
     }
