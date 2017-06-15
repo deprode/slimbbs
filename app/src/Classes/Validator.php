@@ -11,6 +11,7 @@ $translator = function ($message) {
         'These rules must pass for {{name}}'                                => '{{name}}で守られていないルールがあります',
         'All of the required rules must pass for {{name}}'                  => '{{name}}で守られていないルールがあります',
         '{{name}} must have a length lower than {{maxValue}}'               => '{{name}}は{{maxValue}}文字以下で入力してください',
+        '{{name}} must be an integer number'                                => '{{name}}には整数を入力してください',
         '{{name}} must be a string'                                         => '{{name}}には文字列を入力してください',
         '{{name}} must not be empty'                                        => '{{name}}は必須です',
         '{{name}} must have a length between {{minValue}} and {{maxValue}}' => '{{name}}は{{minValue}}〜{{maxValue}}字の範囲で入力してください',
@@ -45,7 +46,7 @@ $adminDeleteValidators = [
 ];
 
 $adminConfigValidators = [
-    'consecutive' => v::intVal()->min(0)->setName('投稿間隔'),
+    'consecutive' => v::intVal()->min(0)->setName('次の投稿までの時間（秒）'),
     'ng_word' => v::arrayType()->notEmpty()->each(v::stringType())->setName('NGワード'),
     'per_page' => v::intVal()->min(1)->setName('1ページの表示数')
 ];

@@ -42,6 +42,7 @@ final class AdminConfigAction
 
         $message = $this->flash->getMessage('resultMessage');
         $error = $this->flash->getMessage('errorMessage');
+        $errors = $this->session->get('errors');
 
         $this->view->render(
             $response,
@@ -51,6 +52,7 @@ final class AdminConfigAction
                 'csrf_value' => $csrf_value,
                 'config' => $configs,
                 'error' => $error[0],
+                'errors' => $errors,
                 'message' => $message[0]
             ]
         );
