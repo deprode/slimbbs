@@ -9,6 +9,7 @@ use Psr\Log\LoggerInterface;
 use RKA\Session;
 use Slim\Flash\Messages;
 use App\Classes\Log;
+use App\Classes\Password;
 
 final class AdminAction
 {
@@ -17,23 +18,16 @@ final class AdminAction
     private $session;
     private $flash;
     private $log;
+    private $password;
 
-    private $admin_id;
-    private $admin_pass;
-
-    public function __construct(Twig $view, LoggerInterface $logger, Session $session, Messages $flash, Log $log)
+    public function __construct(Twig $view, LoggerInterface $logger, Session $session, Messages $flash, Log $log, Password $password)
     {
-        $this->view    = $view;
-        $this->logger  = $logger;
-        $this->session = $session;
-        $this->flash   = $flash;
-        $this->log     = $log;
-    }
-
-    public function setAdminAuth($admin_id, $password)
-    {
-        $this->admin_id = $admin_id;
-        $this->admin_pass = $password;
+        $this->view     = $view;
+        $this->logger   = $logger;
+        $this->session  = $session;
+        $this->flash    = $flash;
+        $this->log      = $log;
+        $this->password = $password;
     }
 
     public function dispatch(Request $request, Response $response)
@@ -50,7 +44,7 @@ final class AdminAction
             $password = $inputs['password'];
 
             // IDとパスワードのチェック
-            if (!$this->checkPassword($admin_id, $password)) {
+            if (!$this->password->checkAdminPassword($admin_id, $password)) {
                 $this->flash->addMessage('errorMessage', 'IDかパスワードが間違っています。');
                 return $response->withRedirect('/auth/');
             }
@@ -89,10 +83,5 @@ final class AdminAction
             ]
         );
         return $response;
-    }
-
-    private function checkPassword($admin_id, $password)
-    {
-        return (string)$admin_id === $this->admin_id && password_verify($password, $this->admin_pass);
     }
 }

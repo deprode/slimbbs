@@ -4,6 +4,12 @@ namespace App\Classes;
 
 class Password
 {
+    public function __construct(string $admin_id, string $password)
+    {
+        $this->admin_id = $admin_id;
+        $this->admin_pass = $password;
+    }
+
     // パスワード検証
     public function checkPassword($input_pass, $del_pass)
     {
@@ -14,5 +20,10 @@ class Password
     public function toHashPassword($password)
     {
         return password_hash($password, PASSWORD_DEFAULT);
+    }
+
+    public function checkAdminPassword(string $id, string $password)
+    {
+        return ($id === $this->admin_id) && (password_verify($password, $this->admin_pass));
     }
 }

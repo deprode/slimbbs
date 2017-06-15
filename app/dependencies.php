@@ -36,7 +36,8 @@ $container['session'] = function ($c) {
 
 // Password
 $container['password'] = function ($c) {
-    return new \App\Classes\Password();
+    $settings = $c->get('settings');
+    return new \App\Classes\Password($settings['auth']['id'], $settings['auth']['password']);
 };
 
 // Posts log
@@ -140,10 +141,9 @@ $container['App\Action\AdminAction'] = function ($c) {
         $c->get('logger'),
         $c->get('session'),
         $c->get('flash'),
-        $c->get('log')
+        $c->get('log'),
+        $c->get('password')
     );
-    $settings = $c->get('settings');
-    $action->setAdminAuth($settings['auth']['id'], $settings['auth']['password']);
     return $action;
 };
 
