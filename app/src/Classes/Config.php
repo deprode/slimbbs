@@ -39,6 +39,26 @@ class Config
         }
     }
 
+    // 入力をiniで保存するために配列に入れる
+    public function format($input)
+    {
+        $ng_word = (array)$input["ng_word"];
+        $consecutive = intval($input["consecutive"]);
+        $per_page = intval($input['per_page']);
+
+        $ng_word = array_filter($ng_word, function ($var) {
+            return !empty($var);
+        });
+
+        $data = [
+            'ng_word' => $ng_word,
+            'consecutive' => $consecutive,
+            'per_page' => $per_page
+        ];
+
+        return $data;
+    }
+
     // クラス内の$configsに格納されている設定を保存する
     public function save()
     {

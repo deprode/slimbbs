@@ -75,35 +75,14 @@ final class AdminConfigAction
             return $response->withRedirect('/admin/config/');
         }
 
-
         $input = $request->getParsedBody();
 
-        $config = $this->format($input);
+        $config = $this->config->format($input);
         $this->config->setConfigs($config);
         $this->config->save();
 
         $this->flash->addMessage('errorMessage', '設定を更新しました');
 
         return $response->withRedirect('/admin/config/');
-    }
-
-    // 入力をiniで保存するために配列に入れる
-    private function format($input)
-    {
-        $ng_word = (array)$input["ng_word"];
-        $consecutive = intval($input["consecutive"]);
-        $per_page = intval($input['per_page']);
-
-        $ng_word = array_filter($ng_word, function ($var) {
-            return !empty($var);
-        });
-
-        $data = [
-            'ng_word' => $ng_word,
-            'consecutive' => $consecutive,
-            'per_page' => $per_page
-        ];
-
-        return $data;
     }
 }
