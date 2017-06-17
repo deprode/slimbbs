@@ -22,7 +22,8 @@ $translator = function ($message) {
         'Each item in {{name}} must be valid'                               => '{{name}}が不正な形式です',
         '{{name}} must not be in {{haystack}}'                              => '{{name}}にNGワードが含まれています',
         '{{name}} must be a valid date. Sample format: {{format}}'          => '{{name}}が日付の形式（{{format}}）ではありません',
-        '{{name}} must be greater than or equal to {{interval}}'            => '{{name}}は{{interval}}より大きい値にしてください'
+        '{{name}} must be greater than or equal to {{interval}}'            => '{{name}}は{{interval}}より大きい値にしてください',
+        '{{name}} must contain only letters (a-z) and digits (0-9)'         => '{{name}}は半角英数字のみ入力してください'
     ];
     return $messages[$message];
 };
