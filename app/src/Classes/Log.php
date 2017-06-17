@@ -7,34 +7,43 @@ class Log
     private $log_path;
     private $past_dir;
     private $log_max;
-
+    private $file;
     private $password;
 
     const DEFAULT_PER_PAGE = 10;
 
     // クラス設定
-    public function __construct(string $path, string $past, int $max)
+    public function __construct(File $file, Password $password, string $path, string $past, int $max)
     {
+        if (!is_dir($past)) {
+            throw new \Exception("past directory is not found or not readable.");
+        }
+        if (!is_readable($path)) {
+            throw new \Exception("log file is not found or not readable.");
+        }
+
+        $this->file     = $file;
+        $this->password = $password;
         $this->log_path = $path;
         $this->past_dir = $past;
         $this->log_max  = $max;
     }
 
-    public function setPassword(Password $password)
+    public function getLogMax()
     {
-        $this->password = $password;
+        return $this->log_max;
     }
 
-    public function generateLogData($data)
+    public function generateLogData(array $data)
     {
         return new LogData($data);
     }
 
-    // N番目の投稿を読み込む
-    public function readDataWithNo(int $post_no)
+    // 直前の投稿を読み込む
+    public function getPreviousPost()
     {
         $data = $this->readData();
-        $datum = array_splice($data, $post_no, 1);
+        $datum = array_splice($data, 0, 1);
         if (count($datum) === 0) {
             return null;
         }
@@ -42,7 +51,7 @@ class Log
     }
 
     // データを表示するサイズに切り取る
-    public static function spliceData(array $data, int $page, int $per_page = self::DEFAULT_PER_PAGE)
+    public static function spliceData(array $data = null, int $page, int $per_page = self::DEFAULT_PER_PAGE)
     {
         if ($data) {
             $data = array_splice($data, $page * $per_page, $per_page);
@@ -59,7 +68,8 @@ class Log
         }
         $data = null;
         if (file_exists($path)) {
-            $data = file_get_contents($path);
+            $this->file->open($path, "c+b");
+            $data = $this->file->read();
         }
         return json_decode($data);
     }
@@ -70,29 +80,40 @@ class Log
         if (is_null($path)) {
             $path = $this->log_path;
         }
-        file_put_contents($path, json_encode($data), LOCK_EX);
+        if (file_exists($path)) {
+            $this->file->open($path, "wb");
+            $this->file->write(json_encode($data));
+        }
     }
 
     // 投稿を保存する
-    public function saveData(LogData $log_data)
+    public function updateData(LogData $log_data, $path = null, $max = PHP_INT_MAX)
     {
-        if (!is_readable($this->log_path)) {
-            throw new \Exception("log file is not found or not readable.");
+        if (is_null($path) || !is_writable($path)) {
+            $path = $this->log_path;
         }
 
-        $data = $this->readData($this->log_path);
+        // ファイル読み込み
+        $data = null;
+        if (file_exists($path)) {
+            $this->file->open($path, "c+b");
+            $data = json_decode($this->file->read());
+        }
+
+        // 新規データを先頭に挿入
         $data = $this->insertInput($data, $log_data);
 
         // 最大保存数を超えた分を切る
-        if (count($data) > $this->log_max) {
-            array_splice($data, $this->log_max);
+        if (count($data) > $max) {
+            array_splice($data, $max);
         }
 
-        $this->writeData($data);
+        // ファイル書き込み
+        $this->file->write(json_encode($data));
     }
 
     // 投稿をログの先頭に入れる
-    public function insertInput(array $data = null, LogData $log_data = null)
+    private function insertInput(array $data = null, LogData $log_data = null)
     {
         if (is_array($data) && count($data) > 0) {
             array_unshift($data, $log_data->getData());
@@ -111,10 +132,9 @@ class Log
             $date_str = date_format(date_create(), 'Ymd');
         }
 
-        $date = new \DateTime();
-        $filepath = $this->past_dir . '/' . $date_str . '.dat';
+        $file_path = $this->past_dir . '/' . $date_str . '.dat';
 
-        return $filepath;
+        return $file_path;
     }
 
     // 過去ログを取得
@@ -127,31 +147,14 @@ class Log
     // 日別ログファイルを作成
     public function createDailyLog()
     {
-        if (!is_dir($this->past_dir)) {
-            throw new \Exception("past directory is not found or not readable.");
-        }
-
-        $filepath = $this->getDailyLogPath();
-
-        // ログファイルがないときに作成
-        if (!file_exists($filepath)) {
-            touch($filepath);
-        }
+        $this->file->create($this->getDailyLogPath());
     }
 
     // 日別ログに書き込み
-    public function writeDailyLog(LogData $log_data)
+    public function updateDailyLog(LogData $log_data)
     {
-        if (!is_dir($this->past_dir)) {
-            throw new \Exception("past directory is not found or not readable.");
-        }
-
-        $filepath = $this->getDailyLogPath();
-        if (is_writable($filepath)) {
-            $data = $this->readData($filepath);
-            $data = $this->insertInput($data, $log_data);
-            $this->writeData($data, $filepath);
-        }
+        $file_path = $this->getDailyLogPath();
+        $this->updateData($log_data, $file_path, PHP_INT_MAX);
     }
 
     // ログ内にある指定した投稿IDのインデックスを返す
@@ -165,16 +168,48 @@ class Log
         return -1;
     }
 
-    // ログの削除
-    private function deleteData(string $id, string $del_pass = null)
+    private function searchData(string $path, string $id)
     {
-        if (!is_readable($this->log_path)) {
-            throw new \Exception("log file is not found or not readable.");
+        if (is_null($path) || !is_writable($path)) {
+            $path = $this->log_path;
         }
 
-        $data = $this->readData();
-        $index = $this->indexOfPostData($data, $id);
+        // ファイル読み込み
+        $data = null;
+        if (file_exists($path)) {
+            $this->file->open($path, "c+b");
+            $data = json_decode($this->file->read());
+        }
+        $index = -1;
+        if (!is_null($data)) {
+            $index = $this->indexOfPostData($data, $id);
+        }
 
+        return ['data' => $data, 'index' => $index];
+    }
+
+    // ログの削除
+    private function deleteData(array $data, string $index, string $path)
+    {
+        $del_data = array_splice($data, $index, 1);
+        $del_data = $del_data[0];
+        $this->writeData($data, $path);
+
+        return $del_data;
+    }
+
+    private function deleteDailyLog($created, $id)
+    {
+        // 日別ログから削除
+        if (isset($this->past_dir)) {
+            $past_path = $this->past_dir . '/' . date_format(date_create($created), 'Ymd') . '.dat';
+            $past_log = $this->searchData($past_path, $id);
+            $this->deleteData($past_log['data'], $past_log['index'], $past_path);
+        }
+    }
+
+    private function isDelete(array $data, int $index, string $del_pass): bool
+    {
         // エラーチェック
         if ($index < 0) {
             // 投稿が見つからない
@@ -183,32 +218,32 @@ class Log
             // 削除パスが違う
             return false;
         }
-
-        $del_data = array_splice($data, $index, 1);
-        $del_data = $del_data[0];
-        $this->writeData($data);
-
-        // 日別ログから削除
-        if (isset($this->past_dir)) {
-            $past_log = $this->past_dir . '/' . date_format(date_create($del_data->created), 'Ymd') . '.dat';
-            $past_data = $this->readData($past_log);
-            $index = $this->indexOfPostData($past_data, $id);
-            array_splice($past_data, $index, 1);
-            $this->writeData($past_data, $past_log);
-        }
-
         return true;
     }
 
     // 削除（ユーザ側からパスをつけて呼ぶ）
     public function deleteDataForUser(string $id, string $del_pass)
     {
-        return $this->deleteData($id, $del_pass);
+        $log = $this->searchData($this->log_path, $id);
+
+        if ($this->isDelete($log['data'], $log['index'], $del_pass)) {
+            $del_data = $this->deleteData($log['data'], $log['index'], $this->log_path);
+
+            $this->deleteDailyLog($del_data->created, $id);
+            return true;
+        }
+
+        return false;
     }
 
     // 削除（管理側からパスなしで呼ぶ）
     public function deleteDataForAdmin(string $id)
     {
-        return $this->deleteData($id);
+        $log = $this->searchData($this->log_path, $id);
+        $del_data = $this->deleteData($log['data'], $log['index'], $this->log_path);
+
+        $this->deleteDailyLog($del_data->created, $id);
+
+        return true;
     }
 }

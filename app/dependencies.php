@@ -40,11 +40,16 @@ $container['password'] = function ($c) {
     return new \App\Classes\Password($settings['auth']['id'], $settings['auth']['password']);
 };
 
+// File
+$container['file'] = function ($c) {
+    return new \App\Classes\File();
+};
+
 // Posts log
 $container['log'] = function ($c) {
     $settings = $c->get('settings');
-    $log = new \App\Classes\Log($settings['log']['path'], $settings['log']['past'], $settings['log']['max']);
-    $log->setPassword($c->get('password'));
+    $max = $settings['log']['max'] ?? PHP_INT_MAX;
+    $log = new \App\Classes\Log($c->get('file'), $c->get('password'), $settings['log']['path'], $settings['log']['past'], $max);
     return $log;
 };
 

@@ -22,7 +22,7 @@ class LogData
         $this->body = $data['body'] ?? '';
         $this->email = $data['email'] ?? '';
         $this->url = $data['url'] ?? '';
-        $this->del_pass = (mb_strlen($data['del_pass']) > 0) ? $this->createDeletePass($data['del_pass']) : '';
+        $this->del_pass = (mb_strlen($data['del_pass']) > 0) ? $this->createDeletePass((string)$data['del_pass']) : '';
         $this->host = $data['host'] ?? '';
         $this->created = $data['created'] ?? date_create('now');
     }
@@ -32,9 +32,9 @@ class LogData
         return bin2hex(openssl_random_pseudo_bytes(6));
     }
 
-    public function createDeletePass($pass)
+    public function createDeletePass(string $pass)
     {
-        $password = new \App\Classes\Password();
+        $password = new Password(null, null);
         return $password->toHashPassword($pass);
     }
 

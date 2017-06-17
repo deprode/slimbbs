@@ -79,9 +79,9 @@ final class SaveAction
 
         // ログの保存
         try {
-            $this->log->saveData($data);
+            $this->log->updateData($data, null, $this->log->getLogMax());
             $this->log->createDailyLog();
-            $this->log->writeDailyLog($data);
+            $this->log->updateDailyLog($data);
             $this->logger->info("saved log");
         } catch (\Exception $e) {
             return $response->write('log file is not found or not readable.');
@@ -95,7 +95,7 @@ final class SaveAction
     // 短時間に連続して書き込んでいるかチェックする
     private function checkConsecutivePost($host)
     {
-        $log = $this->log->readDataWithNo(0);
+        $log = $this->log->getPreviousPost();
         if ($log === null) {
             return true;
         }
