@@ -41,8 +41,6 @@ final class AdminDeleteAction
             return $response;
         }
 
-        $input = $request->getParsedBody();
-
         // Validation
         if($request->getAttribute('has_errors')){
             $errors = $request->getAttribute('errors');

@@ -52,7 +52,6 @@ final class DeleteAction
         }
 
         // 投稿を削除
-        $result = false;
         try {
             $result = $this->log->deleteDataForUser($input['id'], $input['del_pass']);
         } catch (\Exception $e) {
