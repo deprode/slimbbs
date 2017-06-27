@@ -76,8 +76,11 @@
         {% endspaceless %}
     </div>
     <hr>
-    {% for d in data %}
-        <div>
+    {% if data %}
+    <div class="posts">
+        {% for d in data %}
+        <div class="post">
+            <span class="name">
             {% if d.name and d.email %}
                 名前:<a href="mailto:{{ d.email }}">{{ d.name }}</a>
             {% elseif d.name == false and d.email %}
@@ -87,37 +90,49 @@
             {% else %}
                 名前:{{ d.name }}
             {% endif %}
-            <!-- <br> -->
-            ID.{{ d.id }}<br>
+            </span>
+            <span class="id">ID.{{ d.id }}</span>
 
+            <br>
+            <div class="subject">
             {% if d.subject %}
-                <b>{{ d.subject }}</b><br>
+                <b>{{ d.subject }}</b>
             {% else %}
-                <b>無題</b><br>
+                <b>無題</b>
             {% endif %}
+            </div>
 
-            {{ d.body | nl2br }}<br>
+            <div class="body">
+                {{ d.body | nl2br }}
+            </div>
 
-            {% if d.url %}
-                URL: <a href="{{ d.url }}">{{ d.url }}</a><br>
-            {% endif %}
-            {{ d.created }}
-
+            <div class="url">
+                {% if d.url %}
+                    URL: <a href="{{ d.url }}">{{ d.url }}</a><br>
+                {% endif %}
+            </div>
+            <span class="created">
+                {{ d.created }}
+            </span>
             {% if d.del_pass %}
+            <div class="del_form">
                 <a href="javascript:void(0)" onclick="toggle(this)">削除</a>
                 <div class="hidden">
                     <form action="{{ path_for('delete') }}" method="post" accept-charset="utf-8">
                         <input type="hidden" name="id" value="{{ d.id }}">
                         <input type="hidden" name="csrf_name" value="{{ csrf_name }}">
                         <input type="hidden" name="csrf_value" value="{{ csrf_value }}">
-                        <input type="password" name="del_pass" value="" class="thin">
+                        <input title="削除パス" type="password" name="del_pass" value="" class="thin">
                         <input type="submit" value="削除" class="thin">
                     </form>
                 </div>
+            </div>
             {% endif %}
-        </div>
+            </div>
         <hr>
     {% endfor %}
+    </div>
+    {% endif %}
         <div class="row">
             <div class="four columns">
                 {% if pagination.enable %}
@@ -157,7 +172,7 @@
 {% endblock %}
 {% block javascripts %}
     <script type="text/javascript" charset="utf-8">
-        function toggle(element, classname) {
+        function toggle(element) {
             element.nextElementSibling.classList.toggle('hidden');
         }
     </script>
